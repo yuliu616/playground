@@ -1,0 +1,12 @@
+div.func-icon {
+  min-height: 10em;
+  text-align: center;
+}
+
+div.func-icon > i.icon {
+  margin: 0.1em;
+}
+
+div.people-home-func-list {
+  margin-bottom: 0.8em;
+}

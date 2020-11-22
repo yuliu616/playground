@@ -1,0 +1,12 @@
+<div class="ui link cards">
+
+  <div class="card" *ngFor="let p of peopleList">
+    <div class="image module-icon">
+      <i class="male massive icon"></i>
+    </div>
+    <div class="content">
+      <a routerLink="/people/{{ p.id }}">People {{ p.id }} - {{ p.first_name }}</a>
+    </div>
+  </div>
+
+</div>

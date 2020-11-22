@@ -1,0 +1,25 @@
+<div class="ui container segments">
+
+  <div class="ui segment">
+    <h3 class="ui grey header">Page 1</h3>
+    <div class="ui breadcrumb">
+      
+      <a class="section" routerLink="/">Home</a>
+      <i class="right angle icon divider"></i>
+
+      <a class="section" routerLink="/about">About</a>
+      <i class="right angle icon divider"></i>
+
+      <a class="section" routerLink="/people">People</a>
+      <i class="right angle icon divider"></i>
+
+      <div class="active section">Owned Vehicles</div>
+
+    </div>
+  </div>
+
+  <div class="ui segment">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

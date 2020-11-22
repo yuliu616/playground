@@ -1,0 +1,56 @@
+<table class="ui tablet striped stackable table"
+  *ngIf="!invoiceList || invoiceList.length > 0">
+  <thead>
+    <tr>
+      <th style="min-width: 7.2em;">Date</th>
+      <th style="min-width: 7.2em;">Invoice</th>
+      <th style="min-width: 7em;">Amount</th>
+      <th style="min-width: 7.2em;">Items</th>
+    </tr>
+  </thead>
+
+  <tbody *ngIf="invoiceList">
+    
+    <tr *ngFor="let invoice of invoiceList">
+      <td>{{ invoice.bill_date | date: "yyyy-MM-dd" }}</td>
+      <td>{{ invoice.invoice_num }}</td>
+      <td class="right aligned">
+        $ {{ invoice.total_amount | number:'0.2-2' }}
+      </td>
+      <td>
+        <div class="invoice-item-label" 
+          *ngFor="let item of invoice.item">
+          <div class="ui red horizontal label">
+            {{ presentInvoiceItem(item, productList) }}
+          </div>
+        </div>
+      </td>
+    </tr>
+
+  </tbody>
+
+  <tbody *ngIf="!invoiceList">
+    <tr>
+      <td colspan="999">
+        <div class="ui segment" style="width: 100%; height: 20em;">
+          <div class="ui active inverted dimmer">
+            <div class="ui text loader">Loading</div>
+          </div>
+          <p></p>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+
+</table>
+
+<div class="ui icon message"
+  *ngIf="invoiceList && invoiceList.length == 0">
+  <i class="ban icon"></i>
+  <div class="content">
+    <div class="header">
+      Nothing to show.
+    </div>
+    <p>Try changing the search condition for more result.</p>
+  </div>
+</div>

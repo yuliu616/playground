@@ -1,0 +1,87 @@
+<div class="ui link cards">
+  <div class="card" style="width: 100%;">
+    <div class="content">
+      <div class="header">
+        People Edit
+      </div>
+    </div>
+
+    <div class="content" *ngIf="feedback">
+      <div class="ui message" 
+        [class.success]=" feedback?.type=='success' "
+        [class.error]=" feedback?.type=='error' ">
+        <div class="header">
+          {{ feedback?.header }}
+        </div>
+        <p>{{ feedback?.message }}</p>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <form class="ui form">
+        <div class="ui stackable doubling three column grid">
+  
+          <div class="column field" [class.error]="fieldsWithError.indexOf('first_name')>=0">
+            <label>First Name</label>
+            <input type="text" placeholder="First Name"
+              name="first_name" [(ngModel)]="people.first_name">
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('last_name')>=0">
+            <label>Last Name</label>
+            <input type="text" placeholder="Last Name"
+              name="last_name" [(ngModel)]="people.last_name">
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('nickname')>=0">
+            <label>Nickname</label>
+            <input type="text" placeholder="Nickname"
+              name="nickname" [(ngModel)]="people.nickname">
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('gender')>=0">
+            <label>Gender</label>
+            <sui-select class="selection" name="gender"
+                  [(ngModel)]="people.gender"
+                  [options]="genderList"
+                  [isSearchable]="true"
+                  [isDisabled]="false"
+                  #selectDateOfBirthField>
+              <sui-select-option *ngFor="let option of selectDateOfBirthField.filteredOptions"
+                                [value]="option">
+              </sui-select-option>
+            </sui-select>
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('date_of_birth')>=0">
+            <label>Date of birth</label>
+            <div class="ui left icon input">
+              <i class="calendar icon"></i>
+              <input suiDatepicker name="date_of_birth"
+                    [(ngModel)]="people.date_of_birth"
+                    pickerMode="date"
+                    [pickerFirstDayOfWeek]="1"
+                    [pickerUseNativeOnMobile]="false">
+            </div>
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('weight_in_kg')>=0">
+            <label>Weight (kg)</label>
+            <input type="number" placeholder="Weight (in kg)"
+              name="weight_in_kg" [(ngModel)]="people.weight_in_kg">
+          </div>
+  
+        </div>  
+      </form>
+
+    </div>
+    <div class="extra content">
+      <div class="ui two buttons">
+        <div class="ui primary button" 
+          (click)="submitPeopleUpdate()">
+          Update
+        </div>
+        <div class="ui grey button" (click)="cancelUpdate()">
+          Cancel
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
