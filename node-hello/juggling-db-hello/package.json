@@ -1,0 +1,15 @@
+{
+  "name": "jugglingdb-hello",
+  "version": "1.0.0",
+  "description": "hello world for database access using `jugglingdb`.",
+  "main": "hello.ts",
+  "scripts": {
+    "start": "./node_modules/.bin/ts-node hello.ts"
+  },
+  "dependencies": {
+    "jugglingdb": "^2.0.0-rc8",
+    "jugglingdb-mysql": "^0.2.3",
+    "ts-node": "^4.1.0",
+    "typescript": "^2.7.2"
+  }
+}
