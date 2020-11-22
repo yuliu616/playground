@@ -1,0 +1,7 @@
+.module-icon {
+  text-align: center;
+}
+
+.module-icon > i.icon {
+  margin: 0.1em;
+}

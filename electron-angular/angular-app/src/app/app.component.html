@@ -1,0 +1,48 @@
+<div class="ui container inverted segments">
+
+  <div class="ui segment inverted">
+    <h3 class="ui grey header">
+      {{ appTitle() }}
+      <div class="ui right floated basic segment"
+        *ngIf="isWaitingBackend">
+        <div class="ui active dimmer"
+          [class.inverted]="!pref.darkTheme">
+          <div class="ui loader"></div>
+        </div>
+      </div>
+    </h3>
+    
+    <div class="ui breadcrumb">
+      
+      <a class="section" routerLink="/">
+        Home
+      </a>
+      <i *ngIf="pathSegmentList && pathSegmentList.length > 0" 
+        class="right angle icon divider inverted"></i>
+
+      <ng-template ngFor let-item [ngForOf]="pathSegmentList" let-i="index">
+        <a *ngIf="!item.isLast" class="section" routerLink="{{ item.fullPath }}">
+          {{ item.node }}
+        </a>
+        <i *ngIf="!item.isLast" class="right angle icon divider inverted"></i>
+
+        <div *ngIf="item.isLast" class="active section">
+          {{ item.node }}
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+
+  <div class="ui segment inverted" *ngIf="isViewReady">
+    <router-outlet></router-outlet>
+  </div>
+
+  <div class="ui segment" style="width: 100%; height: 20em;"
+    *ngIf="!isViewReady">
+    <div class="ui active dimmer inverted">
+      <div class="ui text loader" i18n="@@app.systemInitializing">System initializing</div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,28 @@
+# compiled output
+target
+dist
+out
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+/.vscode
+.project
+.classpath
+*.launch
+*.iml
+.settings
+
+# misc
+npm-debug.log
+log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Cache used by TypeScript's incremental build
+*.tsbuildinfo

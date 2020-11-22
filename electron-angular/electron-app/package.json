@@ -1,0 +1,62 @@
+{
+  "name": "electron-app",
+  "version": "1.0.0",
+  "main": "dist/electron-app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "import-gui": "mkdir -p dist ; cp -R ../angular-app/dist/angular-app dist",
+    "build": "tsc",
+    "clean": "rm -rf dist/electron-app",
+    "package-mac": "electron-builder -m",
+    "package-win": "electron-builder -w",
+    "package-linux": "electron-builder -l"
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^10.17.17",
+    "electron": "=8.0.3",
+    "electron-builder": "^22.4.0",
+    "typescript": "^3.7.5"
+  },
+  "build": {
+    "appId": "electron-angular-hello-world",
+    "productName": "Electron-Angular Hello World",
+    "files": [
+      "dist/**"
+    ],
+    "directories": {
+      "output": "dist/packaged"
+    },
+    "mac": {
+      "target": [ "tar.gz" ]
+    },
+    "win": {
+      "target": [ "zip" ]
+    },
+    "linux": {
+      "target": [ "tar.gz" ]
+    },
+    "dmg": {
+      "icon": "dist/angular-app/assets/favicons/favicon-144x144.png",
+      "contents": [
+        {
+          "x": 72,
+          "y": 72
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  },
+  "author": {
+    "name": "developer one",
+    "email": "no-one-here@gmail.com"
+  },
+  "homepage": "http://localhost/not-yet-implemented"
+}

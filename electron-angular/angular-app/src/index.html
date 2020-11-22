@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <base href="/">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; connect-src 'none'">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" href="assets/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="assets/favicons/favicon-128x128.png" sizes="128x128">
+  <link rel="apple-touch-icon" sizes="144x144" href="assets/favicons/favicon-144x144.png">
+  <script>
+    var isInsideElectron = (window.require ? true:false);
+    var ipcRenderer = null;
+
+    if (isInsideElectron){
+      // trick to preserve electron hidden functions
+      ipcRenderer = require('electron').ipcRenderer;
+      window.nodeRequire = require;
+      delete window.require;
+      delete window.exports;
+      delete window.module;
+    }
+    
+    function sendToElectronBackend(channel){
+      let args;
+      if (arguments.length < 2){
+        args = [];
+      } else {
+        args = [];
+        for (var i=1;i<arguments.length;i++) {
+          args.push(arguments[i]);
+        }
+      }
+
+      // console.log('args.length=', args.length, ...args);
+      ipcRenderer.send(channel, ...args);
+    }
+  </script>
+</head>
+<body style="padding-top: 8px; background-color: hsl(0,0%,25%);">
+  <app-root></app-root>
+</body>
+</html>

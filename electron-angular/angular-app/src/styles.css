@@ -1,0 +1,66 @@
+/* You can add global styles to this file, and also import other style files */
+sui-accordion.ui.styled.fluid.card.inverted {
+  background-color: hsl(0,0%,20%);
+}
+
+sui-accordion.ui.styled.fluid.level2Inner.card.inverted {
+  background-color: hsl(0,0%,28%);
+}
+
+i.right.angle.icon.divider.inverted {
+  color: white;
+}
+
+div.card.forContentHosting.inverted {
+  background-color: hsl(0,0%,20%);
+}
+
+div.ui.cards div.card.darkGreyCard {
+  background-color: hsl(0, 0%, 14%);
+}
+
+div.ui.link.cards div.card.darkGreyCard:hover {
+  background-color: hsl(0, 0%, 40%);
+}
+
+/* for content within dark card */
+div.ui.cards div.card.inverted div.header {
+  color: white;
+}
+div.ui.cards div.card.inverted div.description {
+  color: white;
+}
+div.ui.cards div.card.inverted div.meta {
+  color: hsl(0, 0%, 75%);
+}
+div.ui.cards div.card.inverted div a {
+  color: white;
+}
+div.ui.cards div.card.inverted div a:hover {
+  color: white;
+  font-weight: bold;
+}
+
+div.ui.cards div.card.darkCyanCard {
+  background-color: hsl(197, 33%, 30%);
+}
+
+div.ui.link.cards div.card.darkCyanCard:hover {
+  background-color: hsl(197, 15%, 40%);
+}
+
+div.ui.cards div.card.darkPinkyCard {
+  background-color: hsl(335, 35%, 30%);
+}
+
+div.ui.link.cards div.card.darkPinkyCard:hover {
+  background-color: hsl(335, 15%, 40%);
+}
+
+div.ui.cards div.card.darkGreenCard {
+  background-color: hsl(147, 35%, 30%);
+}
+
+div.ui.link.cards div.card.darkGreenCard:hover {
+  background-color: hsl(147, 15%, 40%);
+}

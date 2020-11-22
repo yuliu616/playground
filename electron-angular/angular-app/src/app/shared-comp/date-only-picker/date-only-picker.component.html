@@ -1,0 +1,16 @@
+<div class="ui left action input">
+  <button class="ui icon button"
+    suiDatepicker 
+    [(ngModel)]="date"
+    (pickerSelectedDateChange)="onDateChangedInPicker($event)"
+    pickerMode="date"
+    [pickerFirstDayOfWeek]="0">
+    <i class="calendar icon"></i>
+  </button>
+  <button *ngIf="clearButton" class="ui icon button" 
+    (click)="clearValue()">
+    <i class="eraser icon"></i>
+  </button>
+  <input type="text" readonly
+    [value]="date | date: dateFormat">
+</div>

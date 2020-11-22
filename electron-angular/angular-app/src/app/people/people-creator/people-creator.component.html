@@ -1,0 +1,97 @@
+<div class="ui cards">
+  <div class="card forContentHosting inverted" style="width: 100%;">
+    <div class="content">
+      <div class="segment inverted">
+        <div class="ui header inverted" i18n="@@word.people.peopleCreation">
+          People Creation
+        </div>
+      </div>
+    </div>
+
+    <div class="content" *ngIf="feedback">
+      <div class="ui message inverted" 
+        [class.success]=" feedback?.priority=='SUCCESS' "
+        [class.error]=" feedback?.priority=='ERROR' ">
+        <div class="header">
+          {{ feedback?.subject }}
+        </div>
+        <p>{{ feedback?.message }}</p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="ui dimmer" [class.active]="!isViewReady">
+        <div class="ui large text loader" i18n="@@word.loading">Loading</div>
+      </div>
+
+      <form class="ui form inverted" *ngIf="people">
+        <div class="ui stackable doubling three column grid">
+  
+          <div class="column field" [class.error]="fieldsWithError.indexOf('first_name')>=0">
+            <label i18n="@@field.people.firstName">First Name</label>
+            <input type="text" placeholder="First Name"
+              i18n-placeholder="@@field.people.firstName"
+              name="first_name" [(ngModel)]="people.first_name">
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('last_name')>=0">
+            <label i18n="@@field.people.lastName">Last Name</label>
+            <input type="text" placeholder="Last Name"
+              i18n-placeholder="@@field.people.lastName"
+              name="last_name" [(ngModel)]="people.last_name">
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('nickname')>=0">
+            <label i18n="@@field.people.nickname">Nickname</label>
+            <input type="text" placeholder="Nickname"
+              i18n-placeholder="@@field.people.nickname"
+              name="nickname" [(ngModel)]="people.nickname">
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('gender')>=0">
+            <label i18n="@@field.people.gender">Gender</label>
+            <sui-select class="selection" name="gender"
+                  [(ngModel)]="people.gender"
+                  [options]="genderList"
+                  [isSearchable]="true"
+                  [isDisabled]="false"
+                  #selectGenderField>
+              <sui-select-option *ngFor="let option of selectGenderField.filteredOptions"
+                                [value]="option">
+              </sui-select-option>
+            </sui-select>
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('date_of_birth')>=0">
+            <label i18n="@@field.people.dateOfBirth">Date of birth</label>
+            <date-only-picker [(dateInIso)]="people.date_of_birth" 
+              [clearButton]="false"></date-only-picker>
+          </div>
+          <div class="column field" [class.error]="fieldsWithError.indexOf('weight_in_kg')>=0">
+            <label i18n="@@field.people.weightKg">Weight (kg)</label>
+            <input type="number" placeholder="Weight (in kg)"
+              i18n-placeholder="@@field.people.weightKg"
+              name="weight_in_kg" [(ngModel)]="people.weight_in_kg">
+          </div>
+  
+        </div>  
+      </form>
+
+    </div>
+    <div class="extra content">
+      <div class="ui two buttons">
+        <div class="ui button" 
+          [attr.data-tooltip]="reasonOfCantSubmit"
+          [class.primary]="!reasonOfCantSubmit"
+          [class.basic]="reasonOfCantSubmit"
+          [class.grey]="reasonOfCantSubmit"
+          [class.disabled]="isSubmitted"
+          (click)="submitCreation()"
+          i18n="@@word.button.create">
+          Create
+        </div>
+        <div class="ui grey button" (click)="cancelCreation()"
+        i18n="@@word.button.cancel">
+          Cancel
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist/electron-app",
+    "sourceMap": true,
+    "declaration": false,
+    "allowSyntheticDefaultImports": true
+  }
+}
