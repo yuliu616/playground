@@ -1,0 +1,30 @@
+<h1>{{title}}</h1>
+<h2>{{hero.first_name}} details!</h2>
+<div>
+  <label>id: </label>
+  {{hero.id}}
+</div>
+<div>
+  <label i18n="@@appView.name">name: </label>
+  {{hero.first_name}}, {{hero.last_name}}
+</div>
+<div>
+  <button (click)="okPressed()">OK</button>
+</div>
+<div style="width: 20em; border: 0.2em black solid; margin: 1em 1em 0 1em; padding: 1.2em;">
+  <label for='t1'>Msg</label>
+  <input id='t1' type='text' style="width: 100%; display: block;"
+    [(ngModel)]="draftText" />
+  <button (click)="sayIt()">Say</button>
+  <button (click)="ask()">Ask</button>
+</div>
+<div style="width: 20em; border: 0.2em aquamarine solid; background-color: aquamarine; margin: 0 1em 1em 1em; padding: 0 1.2em">
+  THAT IS: {{ draftText | masker }}
+</div>
+
+<div style="border: 0.4em red dotted;">
+  
+  <app-saying></app-saying>
+  <app-greeting [people]='hero'></app-greeting>
+  
+</div>
