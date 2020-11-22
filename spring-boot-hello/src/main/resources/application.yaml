@@ -1,0 +1,51 @@
+server.port: 8080
+hello:
+  serviceName: hello-service
+  age: 10
+apiMeta:
+  path: /api/v1.2
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+spring:
+  profiles: default
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+    hibernate:
+      ddl-auto: none
+#      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/johnsondb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&noAccessToProcedureBodies=true
+    username: john
+    password: blessedbook
+    hikari:
+      maximum-pool-size: 100
+---
+spring:
+  profiles: development
+  profiles:
+    include:
+    - default
+  datasource:
+    url: jdbc:mysql://192.168.0.100:3306/pasdb
+    username: devuser
+    password: blesseddev
+hello:
+  age: 20
+---
+spring:
+  profiles: production
+  profiles:
+    include:
+    - default
+  datasource:
+    url: jdbc:mysql://liu-mini:3306/pasdb
+    username: devuser
+    password: 12341234
+hello:
+  age: 30
