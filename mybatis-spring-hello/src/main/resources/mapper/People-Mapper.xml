@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yu.PeopleMapper">
+  <select id="findPeopleById"
+          parameterType="long"
+          resultType="com.yu.model.People">
+  SELECT id, version,
+    creation_date as creationDate,
+    last_updated as lastUpdated,
+    first_name as firstName,
+    last_name as lastName,
+    nickname,
+    gender,
+    date_of_birth as dateOfBirth,
+    weight_in_kg as weightInKg
+  FROM people
+  WHERE id = #{id}
+  </select>
+  <select id="findLastInsertedPeople"
+          resultType="com.yu.model.People">
+    SELECT id, version,
+    creation_date as creationDate,
+    last_updated as lastUpdated,
+    first_name as firstName,
+    last_name as lastName,
+    nickname,
+    gender,
+    date_of_birth as dateOfBirth,
+    weight_in_kg as weightInKg
+    FROM people
+    WHERE id = last_insert_id()
+  </select>
+  <insert id="insertPeopleWithNamesAndGender">
+    insert people (first_name, last_name, nickname, gender)
+    values (#{firstName},  #{lastName}, #{nickname}, #{gender})
+  </insert>
+  <insert id="insertPeopleWithModel"
+          useGeneratedKeys="true"
+          keyProperty="id"
+          parameterType="com.yu.model.People">
+    insert people (version,
+      first_name, last_name, nickname,
+      gender, date_of_birth, weight_in_kg)
+    values (1,
+      #{p.firstName},  #{p.lastName}, #{p.nickname},
+      #{p.gender}, #{p.dateOfBirth}, #{p.weightInKg})
+  </insert>
+  <update id="updatePeopleWithNameById">
+    update people
+    set version = version+1,
+      last_updated = CURRENT_TIMESTAMP,
+      people.first_name = #{firstName},
+      people.last_name = #{lastName},
+      people.nickname = #{nickname}
+    where id = #{id} and version = #{version}
+  </update>
+  <update id="updatePeopleWithModel"
+          parameterType="com.yu.model.People">
+    update people
+    set version = version+1,
+      last_updated = CURRENT_TIMESTAMP,
+      people.first_name = #{p.firstName},
+      people.last_name = #{p.lastName},
+      people.nickname = #{p.nickname},
+      people.gender = #{p.gender},
+      people.date_of_birth = #{p.dateOfBirth},
+      people.weight_in_kg = #{p.weightInKg}
+    where id = #{p.id} and version = #{p.version}
+  </update>
+  <delete id="deletePeopleWithId">
+    delete from people
+    where id = #{id} and version = #{version}
+  </delete>
+</mapper>
