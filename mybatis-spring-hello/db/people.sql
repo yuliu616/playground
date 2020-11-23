@@ -11,6 +11,7 @@ CREATE TABLE `people` (
   `gender` varchar(20) DEFAULT NULL,
   `date_of_birth` datetime DEFAULT NULL,
   `weight_in_kg` decimal(8,2) DEFAULT NULL,
+  `born_family_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -28,3 +29,6 @@ ADD INDEX `ix_people_last_name` (`last_name` ASC);
 
 ALTER TABLE `people`
 ADD INDEX `ix_people_nickname` (`nickname` ASC);
+
+ALTER TABLE `people`
+ADD INDEX `ix_people_born_family_id` (`born_family_id` ASC);

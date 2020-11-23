@@ -6,27 +6,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Map;
 
-@RequestMapping("/hello")
+@RequestMapping("/hello/people")
 @RestController
-public class Hello {
+public class PeopleController {
 
     @Autowired
     private PeopleMapper peopleMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(Hello.class);
+    private static final Logger logger = LoggerFactory.getLogger(PeopleController.class);
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -35,10 +38,7 @@ public class Hello {
         return Collections.singletonMap("message", throwable.getMessage());
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/people/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/{id}")
     public People findPeopleById(
             @PathVariable("id") long id
     ){
@@ -51,11 +51,24 @@ public class Hello {
         return p;
     }
 
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = "/people/createByNamesAndGender",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/{id}/husband")
+    public People findHusbandById(
+            @PathVariable("id") long id
+    ){
+        People p = peopleMapper.findHusbandByWifeId(id);
+        return p;
+    }
+
+    @GetMapping("/{id}/wife")
+    public People findWifeById(
+            @PathVariable("id") long id
+    ){
+        People p = peopleMapper.findWifeByHusbandId(id);
+        return p;
+    }
+
+    @Transactional
+    @PostMapping("/createByNamesAndGender")
     public People createPeopleWithNamesAndGender(
             @RequestBody Map<String, String> data)
     {
@@ -79,11 +92,8 @@ public class Hello {
         return this.peopleMapper.findLastInsertedPeople();
     }
 
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = "/people",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PostMapping("")
     public People createPeopleAsProvided(
             @RequestBody People people)
     {
@@ -99,11 +109,8 @@ public class Hello {
         return people;
     }
 
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = "/people/{id}/updatePeopleWithNames",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PutMapping("/{id}/updatePeopleWithNames")
     public People updatePeopleWithNames(
             @PathVariable("id") long id,
             @RequestBody Map<String, String> data)
@@ -132,11 +139,8 @@ public class Hello {
         return this.peopleMapper.findPeopleById(id);
     }
 
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = "/people/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PutMapping("/{id}")
     public People updatePeopleAsProvided(
             @PathVariable("id") long id,
             @RequestBody People people)
@@ -155,11 +159,8 @@ public class Hello {
         return people;
     }
 
-    @RequestMapping(
-            method = RequestMethod.DELETE,
-            value = "/people/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @DeleteMapping("/{id}")
     public String deletePeopleAsProvided(
             @PathVariable("id") long id,
             @RequestBody Map<String, String> data)

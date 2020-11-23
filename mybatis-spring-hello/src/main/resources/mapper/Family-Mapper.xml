@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yu.FamilyMapper">
+  <sql id="familyColumns">
+    ${alias}.version,
+    ${alias}.creation_date as creationDate,
+    ${alias}.last_updated as lastUpdated,
+    ${alias}.father_id as fatherId,
+    ${alias}.mother_id as motherId</sql>
+  <sql id="peopleColumnsAs">
+    ${alias}.version as ${alias}_version,
+    ${alias}.creation_date as ${alias}_creationDate,
+    ${alias}.last_updated as ${alias}_lastUpdated,
+    ${alias}.first_name as ${alias}_firstName,
+    ${alias}.last_name as ${alias}_lastName,
+    ${alias}.nickname as ${alias}_nickname,
+    ${alias}.gender as ${alias}_gender,
+    ${alias}.date_of_birth as ${alias}_dateOfBirth,
+    ${alias}.weight_in_kg as ${alias}_weightInKg,
+    ${alias}.born_family_id as ${alias}_bornFamilyId</sql>
+  <resultMap id="familyWithChildren" type="com.yu.model.Family">
+    <id property="id" column="id" />
+    <result property="version" column="version" />
+    <result property="creationDate" column="creationDate" />
+    <result property="lastUpdated" column="lastUpdated" />
+    <result property="fatherId" column="fatherId" />
+    <result property="motherId" column="motherId" />
+    <association property="father" javaType="com.yu.model.People">
+      <id property="id" column="fatherId" />
+      <result property="version" column="father_version" />
+      <result property="creationDate" column="father_creationDate" />
+      <result property="lastUpdated" column="father_lastUpdated" />
+      <result property="firstName" column="father_firstName" />
+      <result property="lastName" column="father_lastName" />
+      <result property="nickname" column="father_nickname" />
+      <result property="gender" column="father_gender" />
+      <result property="dateOfBirth" column="father_dateOfBirth" />
+      <result property="weightInKg" column="father_weightInKg" />
+      <result property="bornFamilyId" column="father_born_family_id" />
+    </association>
+    <association property="mother" javaType="com.yu.model.People">
+      <id property="id" column="motherId" />
+      <result property="version" column="mother_version" />
+      <result property="creationDate" column="mother_creationDate" />
+      <result property="lastUpdated" column="mother_lastUpdated" />
+      <result property="firstName" column="mother_firstName" />
+      <result property="lastName" column="mother_lastName" />
+      <result property="nickname" column="mother_nickname" />
+      <result property="gender" column="mother_gender" />
+      <result property="dateOfBirth" column="mother_dateOfBirth" />
+      <result property="weightInKg" column="mother_weightInKg" />
+      <result property="bornFamilyId" column="mother_born_family_id" />
+    </association>
+    <collection property="children" ofType="com.yu.model.People">
+      <id property="id" column="child_id" />
+      <result property="version" column="child_version" />
+      <result property="creationDate" column="child_creationDate" />
+      <result property="lastUpdated" column="child_lastUpdated" />
+      <result property="firstName" column="child_firstName" />
+      <result property="lastName" column="child_lastName" />
+      <result property="nickname" column="child_nickname" />
+      <result property="gender" column="child_gender" />
+      <result property="dateOfBirth" column="child_dateOfBirth" />
+      <result property="weightInKg" column="child_weightInKg" />
+      <result property="bornFamilyId" column="id" />
+    </collection>
+  </resultMap>
+  <select id="findFamilyById"
+          parameterType="long"
+          resultType="com.yu.model.Family">
+    SELECT id,
+      <include refid="familyColumns">
+        <property name="alias" value="family"/>
+      </include>
+    FROM family
+    WHERE id = #{id}
+  </select>
+  <select id="findFamilyWithChildrenById"
+          parameterType="long"
+          resultMap="familyWithChildren">
+    SELECT family.id,
+      <include refid="familyColumns">
+        <property name="alias" value="family"/>
+      </include>,
+      <include refid="peopleColumnsAs">
+        <property name="alias" value="father"/>
+      </include>,
+      <include refid="peopleColumnsAs">
+        <property name="alias" value="mother"/>
+      </include>,
+      <include refid="peopleColumnsAs">
+        <property name="alias" value="child"/>
+      </include>
+    FROM family
+      left outer join people as father on
+        father.id = family.father_id
+      left outer join people as mother on
+        mother.id = family.mother_id
+      left outer join people as child on
+        child.born_family_id = family.id
+    WHERE family.id = #{id}
+  </select>
+  <insert id="insertFamily"
+          useGeneratedKeys="true"
+          keyProperty="id"
+          parameterType="com.yu.model.Family">
+    insert family (version,
+      father_id, mother_id)
+    values (1,
+      #{f.fatherId},  #{f.motherId})
+  </insert>
+</mapper>

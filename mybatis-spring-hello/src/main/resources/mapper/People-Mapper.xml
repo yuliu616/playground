@@ -3,34 +3,83 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yu.PeopleMapper">
+  <sql id="peopleColumns">
+    ${alias}.version,
+    ${alias}.creation_date as creationDate,
+    ${alias}.last_updated as lastUpdated,
+    ${alias}.first_name as firstName,
+    ${alias}.last_name as lastName,
+    ${alias}.nickname,
+    ${alias}.gender,
+    ${alias}.date_of_birth as dateOfBirth,
+    ${alias}.weight_in_kg as weightInKg,
+    ${alias}.born_family_id as bornFamilyId</sql>
   <select id="findPeopleById"
           parameterType="long"
           resultType="com.yu.model.People">
-  SELECT id, version,
-    creation_date as creationDate,
-    last_updated as lastUpdated,
-    first_name as firstName,
-    last_name as lastName,
-    nickname,
-    gender,
-    date_of_birth as dateOfBirth,
-    weight_in_kg as weightInKg
+  SELECT id,
+    <include refid="peopleColumns">
+      <property name="alias" value="people" />
+    </include>
   FROM people
   WHERE id = #{id}
   </select>
   <select id="findLastInsertedPeople"
           resultType="com.yu.model.People">
-    SELECT id, version,
-    creation_date as creationDate,
-    last_updated as lastUpdated,
-    first_name as firstName,
-    last_name as lastName,
-    nickname,
-    gender,
-    date_of_birth as dateOfBirth,
-    weight_in_kg as weightInKg
+    SELECT id,
+      <include refid="peopleColumns">
+        <property name="alias" value="people" />
+      </include>
     FROM people
     WHERE id = last_insert_id()
+  </select>
+  <select id="findPeopleByBornFamilyId"
+          parameterType="long"
+          resultType="com.yu.model.People">
+    SELECT people.id,
+      <include refid="peopleColumns">
+        <property name="alias" value="people" />
+      </include>
+    FROM people
+    WHERE born_family_id = #{bornFamilyId}
+  </select>
+  <select id="findWifeByHusbandId"
+          parameterType="long"
+          resultType="com.yu.model.People">
+    SELECT people.id,
+      <include refid="peopleColumns">
+        <property name="alias" value="people" />
+      </include>
+    from people as husband
+      inner join family on family.father_id = husband.id
+      inner join people as people on people.id = family.mother_id
+    where husband.id = #{husbandId}
+  </select>
+  <select id="findHusbandByWifeId"
+          parameterType="long"
+          resultType="com.yu.model.People">
+    SELECT people.id,
+      <include refid="peopleColumns">
+        <property name="alias" value="people" />
+      </include>
+    from people as wife
+      inner join family on family.mother_id = wife.id
+      inner join people as people on people.id = family.father_id
+      where wife.id = #{wifeId}
+  </select>
+  <select id="findPeopleByIdList"
+          resultType="com.yu.model.People">
+    SELECT people.id,
+      <include refid="peopleColumns">
+        <property name="alias" value="people" />
+      </include>
+    FROM people
+    WHERE id in (
+      <foreach item="item" index="index" collection="idList"
+               separator=",">
+        #{item}
+      </foreach>
+    )
   </select>
   <insert id="insertPeopleWithNamesAndGender">
     insert people (first_name, last_name, nickname, gender)
@@ -68,6 +117,18 @@
       people.date_of_birth = #{p.dateOfBirth},
       people.weight_in_kg = #{p.weightInKg}
     where id = #{p.id} and version = #{p.version}
+  </update>
+  <update id="assignBornFamilyToPeople">
+    update people
+    set version = version+1,
+      last_updated = CURRENT_TIMESTAMP,
+      born_family_id = #{bornFamilyId}
+    where id in (
+      <foreach item="item" index="index" collection="idList"
+               separator=",">
+        #{item}
+      </foreach>
+    )
   </update>
   <delete id="deletePeopleWithId">
     delete from people

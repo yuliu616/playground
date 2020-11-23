@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 
-public class People {
+public class People implements IHasId {
 
-    private int id;
+    private long id;
 
     private int version = 0;
 
@@ -26,11 +26,13 @@ public class People {
 
     private BigDecimal weightInKg;
 
-    public int getId() {
+    private Long bornFamilyId;
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -96,5 +98,13 @@ public class People {
 
     public void setWeightInKg(BigDecimal weightInKg) {
         this.weightInKg = weightInKg;
+    }
+
+    public Long getBornFamilyId() {
+        return bornFamilyId;
+    }
+
+    public void setBornFamilyId(Long bornFamilyId) {
+        this.bornFamilyId = bornFamilyId;
     }
 }
