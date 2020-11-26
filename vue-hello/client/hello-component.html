@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="hello-component.js"></script>
+</head>
+<body style="padding: 2em;" onload="init()">
+  <div id="my-app" class="ui cards">
+
+    <div class="card">  
+      <div class="content">
+        <div class="header">
+          Hello Vue
+        </div>
+        <div class="meta">
+          {{ message }}
+        </div>
+        <div class="description">
+          This is a hello world app.
+          <some-parent></some-parent>
+        </div>      
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
