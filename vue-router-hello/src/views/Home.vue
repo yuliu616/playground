@@ -13,6 +13,41 @@
       </div>
 
     </div>
+
+    <div class="ui list" style="margin-top: 3em;">
+
+      <router-link to="/" class="item">
+        <i class="right triangle icon"></i>
+        <div class="content">
+          <div class="header">Home</div>
+          <div class="description">
+            Home page of this site/app.
+            </div>
+        </div>
+      </router-link>
+
+      <router-link to="/about" class="item">
+        <i class="right triangle icon"></i>
+        <div class="content">
+          <div class="header">About</div>
+          <div class="description">
+            Find out who we are and what we do.
+          </div>
+        </div>
+      </router-link>
+      
+      <router-link to="/people" class="item">
+        <i class="right triangle icon"></i>
+        <div class="content">
+          <div class="header">People</div>
+          <div class="description">
+            Entry point of People sub-system.
+          </div>
+        </div>
+      </router-link>
+
+    </div>
+
   </div>
 </template>
 
