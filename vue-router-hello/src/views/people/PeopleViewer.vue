@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import * as toastr from 'toastr/build/toastr.min.js';
+
 const peopleList = [
   {id:40010, firstName: 'Tony', lastName: 'Becker'},
   {id:40011, firstName: 'Bitty', lastName: 'Ford'},
@@ -49,6 +51,8 @@ export default {
     if (!peopleList.some(it=>it.id==from.params.id)) {
       console.log('peopleViewer:beforeRouteEnter from=', 
         from, ' to=', to);
+      toastr.error(`invalid people ID: [${from.params.id}]`,
+        'invalid route');
       next(new Error(`target people not found (${from.params.id})`));
     } else {
       next();

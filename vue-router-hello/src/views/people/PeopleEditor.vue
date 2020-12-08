@@ -24,7 +24,8 @@
       </form>    
     </div>
     <div class="ui two bottom attached buttons">
-      <div class="ui primary button">
+      <div class="ui primary button"
+        v-on:click="onSaveClicked()">
         <i class="save icon"></i>
         Save
       </div>
@@ -40,6 +41,8 @@
 </template>
 
 <script>
+import * as toastr from 'toastr/build/toastr.min.js';
+
 const peopleList = [
   {id:40010, firstName: 'Tony', lastName: 'Becker'},
   {id:40011, firstName: 'Bitty', lastName: 'Ford'},
@@ -55,6 +58,9 @@ export default {
     };
   },
   methods: {
+    onSaveClicked: function(){
+      toastr.info('save clicked');
+    },
     onCloseClicked: function(){
       this.$router.push('../../list');
     },
