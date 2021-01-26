@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+  <script src="./src/script1.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body style="background-color: gray;">
+
+  <div class="ui basic segment">
+    <div class="ui card" style="min-width: 12em; max-width: 36em">
+
+      <div class="content">
+        <div class="red-label header">
+          Peter
+        </div>
+        <div class="description">
+          Peter Chan, your friend without heart.
+        </div>
+        <div class="meta" style="margin-top: 0.6em;">
+          <div class="ui teal progress" id="progress1">
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ui bottom attached button" onclick="increaseProgress()">
+        <i class="add icon"></i>
+        More
+      </div>
+
+    </div>
+  </div>
+  
+</body>
+</html>
