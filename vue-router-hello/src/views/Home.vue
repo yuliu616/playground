@@ -48,6 +48,46 @@
 
     </div>
 
+    <div class="ui segment">
+      <div class="ui compact basic menu">
+        <div class="ui dropdown item">
+          More
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="item" v-on:click="onTimeAskingButtonPressed()">
+              What is the time ?
+            </div>
+            <div class="item">
+              Nothing here
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui basic modal WhatTimeIsIt">
+      <div class="ui icon header">
+        <i class="clock icon"></i>
+        System Clock
+      </div>
+      <div class="content">
+        <p>
+          {{ currentTimeGreetingWord }},
+          the time now is {{ currentTimeForReporting }}
+        </p>
+      </div>
+      <div class="actions">
+        <div class="ui green ok button inverted">
+          <i class="check icon"></i>
+          Good
+        </div>
+        <div class="ui blue basic cancel button inverted">
+          <i class="close icon"></i>
+          Ok
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -58,8 +98,30 @@ export default {
   name: 'Home',
   data() {
     return {
-      message: 'Hello, my friend.'
+      message: 'Hello, my friend.',
+      currentTimeGreetingWord: 'hi',
+      currentTimeForReporting: 'n/a',
     };
+  },
+  mounted(){
+    // semantic ui: init for dropdown
+    window.$('.ui.dropdown').dropdown();
+  },
+  methods: {
+    onTimeAskingButtonPressed(){
+      let now = new Date();
+      if (now.getHours() < 5 || now.getHours() > 17) {
+        this.currentTimeGreetingWord = "good evening";
+      } else if (now.getHours() >= 12 && now.getHours() <= 17) {
+        this.currentTimeGreetingWord = "good afternoon";
+      }  else {
+        this.currentTimeGreetingWord = "good morning";
+      }
+      this.currentTimeForReporting = now.toDateString();
+      
+      // semantic ui: show model dialog
+      window.$('.ui.basic.modal.WhatTimeIsIt').modal('show');
+    },
   },
   components: {
     CounterList
