@@ -1,0 +1,11 @@
+netty:
+  port: 7778
+  boss-thread-count: 32
+  worker-thread-count: 640
+hello:
+  will-send-greeting-message: false
+  response-as-echo: false
+  response-as-http-works: true
+  response-as-http-works.work-repeating-count: 8
+  response-as-http-works.burst-data: true
+  response-as-http-echo: false

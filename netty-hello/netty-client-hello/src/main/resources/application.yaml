@@ -1,0 +1,6 @@
+nettyServer:
+  host: 127.0.0.1
+  port: 7778
+hello:
+  make-http-request: true
+  make-http-request.path: /works
