@@ -2,6 +2,7 @@ package com.yu.hello;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -60,10 +61,13 @@ public class HelloNServer implements Runnable {
             });
 
             this.activeGroups = new EventLoopGroup[]{ bossGroup, workerGroup };
-
             // start server and close on end
-            ChannelFuture onServerDone = bootstrap.bind(port).sync();
-            onServerDone.channel().closeFuture().sync();
+            bootstrap.bind(port).addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                    channelFuture.channel().closeFuture();
+                }
+            });
 
         } catch (Exception ex) {
             logger.error("error in Netty server loop.", ex);

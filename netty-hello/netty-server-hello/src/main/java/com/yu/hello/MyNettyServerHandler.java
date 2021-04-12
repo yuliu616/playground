@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -181,29 +182,50 @@ public class MyNettyServerHandler extends ChannelInboundHandlerAdapter {
         responseHeaderPart.append("Content-Length: "+(itWorkSymbol.length() * itWorksRepeatingCount)+"\n");
         responseHeaderPart.append("\n"); // http/1.1 use a blank line as end of http headers
 
-        { //write response header
+        CompletableFuture<Void> taskChain = CompletableFuture.completedFuture(null);
+        taskChain = taskChain.thenAccept((Void)->{ //write response header
             logger.info("write response header ...");
-            ByteBuf respBuffer = ctx.alloc().buffer(responseHeaderPart.length());
-            respBuffer.writeBytes(responseHeaderPart.toString().getBytes("UTF-8"));
-            ctx.writeAndFlush(respBuffer).sync();
+            try {
+                ByteBuf respBuffer = ctx.alloc().buffer(responseHeaderPart.length());
+                respBuffer.writeBytes(responseHeaderPart.toString().getBytes("UTF-8"));
+                ctx.writeAndFlush(respBuffer);
+            } catch (Exception ex) {
+                logger.error("error while writing response header", ex);
+            }
             logger.info("write response header ... done");
-        }
+        });
+
         { //write response content
+            final byte[] itWorkSymbolBytes = itWorkSymbol.getBytes("UTF-8");
             for (int i=0;i<itWorksRepeatingCount;i++) {
                 logger.info("write response content ... i={}", i);
-                byte[] itWorkSymbolBytes = itWorkSymbol.getBytes("UTF-8");
-                ByteBuf respBuffer = ctx.alloc().buffer(itWorkSymbolBytes.length);
-                respBuffer.writeBytes(itWorkSymbolBytes);
-                ctx.writeAndFlush(respBuffer).sync();
+                taskChain = taskChain.thenCompose((Void)->{
+                    ByteBuf respBuffer = ctx.alloc().buffer(itWorkSymbolBytes.length);
+                    respBuffer.writeBytes(itWorkSymbolBytes);
+                    return FutureUtil.asCompleteFuture(ctx.writeAndFlush(respBuffer));
+                });
                 if (i > 0 && i % 10 == 0 &&
                     !this.responseAsHttpWorksInBurstDataMode)
                 {
-                    Thread.sleep((long)(1000*Math.random()));
+                    taskChain = taskChain.thenAccept((Void)->{
+                        try {
+//                            logger.info("sleeping ...");
+                            Thread.sleep((long)(1000*Math.random()));
+                        } catch (InterruptedException ex) {
+                            logger.error("error while sleeping", ex);
+                        }
+                    });
                 }
             }
             logger.info("write response content ... done");
         }
-        ctx.close();
+        taskChain = taskChain.thenCompose((Void)->{
+//            logger.info("close ctx ...");
+            return FutureUtil.asCompleteFuture(ctx.close());
+        });
+//        taskChain.thenAccept((Void)->{
+//           logger.info("taskChain finished.");
+//        });
     }
 
     private void echoAsHttp(ChannelHandlerContext ctx, Object msg) throws Exception {
