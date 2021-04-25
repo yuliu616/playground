@@ -10,9 +10,20 @@ public interface PeopleMapper {
 
     People findPeopleById(@Param("id") long id);
 
+    List<People> listAllPeople(
+            @Param("isActive") boolean isActive,
+            @Param("pageOffset") long pageOffset,
+            @Param("pageSize") long pageSize);
+
+    List<People> listAllPeople2(
+            @Param("pageOffset") long pageOffset,
+            @Param("pageSize") long pageSize);
+
     List<People> findPeopleByIdList(@Param("idList") List<Long> idList);
 
     List<People> findPeopleByBornFamilyId(@Param("bornFamilyId") long bornFamilyId);
+
+    long countAll();
 
     People findWifeByHusbandId(@Param("husbandId") long husbandId);
 
@@ -26,7 +37,7 @@ public interface PeopleMapper {
             @Param("nickname") String nickname,
             @Param("gender") Gender gender);
 
-    long insertPeopleWithModel(@Param("p") People people);
+    long insertPeopleWithModel(@Param("it") People people);
 
     long updatePeopleWithNameById(
             @Param("id") long id,
@@ -36,13 +47,14 @@ public interface PeopleMapper {
             @Param("nickname") String nickname
     );
 
-    long updatePeopleWithModel(@Param("p") People people);
-
-    long assignBornFamilyToPeople(
-            @Param("idList") List<Long> idList,
-            @Param("bornFamilyId") long bornFamilyId);
+    long updatePeopleWithModel(@Param("it") People people);
 
     long deletePeopleWithId(
+            @Param("id") long id,
+            @Param("version") long version
+    );
+
+    long disablePeopleWithId(
             @Param("id") long id,
             @Param("version") long version
     );

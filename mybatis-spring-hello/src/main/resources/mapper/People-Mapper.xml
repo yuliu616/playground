@@ -7,13 +7,14 @@
     ${alias}.version,
     ${alias}.creation_date as creationDate,
     ${alias}.last_updated as lastUpdated,
+    ${alias}.is_active as isActive,
+    ${alias}.gender,
+    ${alias}.nickname,
+    ${alias}.date_of_birth as dateOfBirth,
     ${alias}.first_name as firstName,
     ${alias}.last_name as lastName,
-    ${alias}.nickname,
-    ${alias}.gender,
-    ${alias}.date_of_birth as dateOfBirth,
-    ${alias}.weight_in_kg as weightInKg,
-    ${alias}.born_family_id as bornFamilyId</sql>
+    ${alias}.height_in_cm as heightInCm,
+    ${alias}.weight_in_kg as weightInKg</sql>
   <select id="findPeopleById"
           parameterType="long"
           resultType="com.yu.model.People">
@@ -24,6 +25,27 @@
   FROM people
   WHERE id = #{id}
   </select>
+  <select id="listAllPeople" resultType="com.yu.model.People">
+    SELECT id,
+    <include refid="peopleColumns">
+      <property name="alias" value="it" />
+    </include>
+    FROM people as it
+    WHERE it.is_active = #{isActive}
+    LIMIT #{pageOffset},#{pageSize}
+  </select>
+  <select id="listAllPeople2" resultType="com.yu.model.People">
+    SELECT id,
+    <include refid="peopleColumns">
+      <property name="alias" value="it" />
+    </include>
+    FROM people as it
+    LIMIT #{pageOffset},#{pageSize}
+  </select>
+  <select id="countAll" resultType="long">
+    SELECT count(*)
+    FROM people
+  </select>
   <select id="findLastInsertedPeople"
           resultType="com.yu.model.People">
     SELECT id,
@@ -32,16 +54,6 @@
       </include>
     FROM people
     WHERE id = last_insert_id()
-  </select>
-  <select id="findPeopleByBornFamilyId"
-          parameterType="long"
-          resultType="com.yu.model.People">
-    SELECT people.id,
-      <include refid="peopleColumns">
-        <property name="alias" value="people" />
-      </include>
-    FROM people
-    WHERE born_family_id = #{bornFamilyId}
   </select>
   <select id="findWifeByHusbandId"
           parameterType="long"
@@ -54,6 +66,7 @@
       inner join family on family.father_id = husband.id
       inner join people as people on people.id = family.mother_id
     where husband.id = #{husbandId}
+      and people.is_active = true
   </select>
   <select id="findHusbandByWifeId"
           parameterType="long"
@@ -65,7 +78,8 @@
     from people as wife
       inner join family on family.mother_id = wife.id
       inner join people as people on people.id = family.father_id
-      where wife.id = #{wifeId}
+    where wife.id = #{wifeId}
+      and people.is_active = true
   </select>
   <select id="findPeopleByIdList"
           resultType="com.yu.model.People">
@@ -82,19 +96,19 @@
     )
   </select>
   <insert id="insertPeopleWithNamesAndGender">
-    insert people (first_name, last_name, nickname, gender)
-    values (#{firstName},  #{lastName}, #{nickname}, #{gender})
+    insert people (is_active, first_name, last_name, nickname, gender)
+    values (true, #{firstName},  #{lastName}, #{nickname}, #{gender})
   </insert>
   <insert id="insertPeopleWithModel"
           useGeneratedKeys="true"
           keyProperty="id"
           parameterType="com.yu.model.People">
     insert people (version,
-      first_name, last_name, nickname,
-      gender, date_of_birth, weight_in_kg)
+      is_active, gender, nickname, date_of_birth,
+      first_name, last_name, height_in_cm, weight_in_kg)
     values (1,
-      #{p.firstName},  #{p.lastName}, #{p.nickname},
-      #{p.gender}, #{p.dateOfBirth}, #{p.weightInKg})
+      #{it.isActive}, #{it.gender}, #{it.nickname}, #{it.dateOfBirth},
+      #{it.firstName}, #{it.lastName}, #{it.heightInCm}, #{it.weightInKg})
   </insert>
   <update id="updatePeopleWithNameById">
     update people
@@ -110,28 +124,25 @@
     update people
     set version = version+1,
       last_updated = CURRENT_TIMESTAMP,
-      people.first_name = #{p.firstName},
-      people.last_name = #{p.lastName},
-      people.nickname = #{p.nickname},
-      people.gender = #{p.gender},
-      people.date_of_birth = #{p.dateOfBirth},
-      people.weight_in_kg = #{p.weightInKg}
-    where id = #{p.id} and version = #{p.version}
-  </update>
-  <update id="assignBornFamilyToPeople">
-    update people
-    set version = version+1,
-      last_updated = CURRENT_TIMESTAMP,
-      born_family_id = #{bornFamilyId}
-    where id in (
-      <foreach item="item" index="index" collection="idList"
-               separator=",">
-        #{item}
-      </foreach>
-    )
+      is_active = #{it.isActive},
+      gender = #{it.gender},
+      nickname = #{it.nickname},
+      date_of_birth = #{it.dateOfBirth},
+      first_name = #{it.firstName},
+      last_name = #{it.lastName},
+      height_in_cm = #{it.heightInCm},
+      weight_in_kg = #{it.weightInKg}
+    where id = #{it.id} and version = #{it.version}
   </update>
   <delete id="deletePeopleWithId">
     delete from people
+    where id = #{id} and version = #{version}
+  </delete>
+  <delete id="disablePeopleWithId">
+    update people
+    set version = version+1,
+      last_updated = CURRENT_TIMESTAMP,
+      is_active = false
     where id = #{id} and version = #{version}
   </delete>
 </mapper>

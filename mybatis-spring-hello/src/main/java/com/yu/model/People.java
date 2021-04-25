@@ -1,5 +1,8 @@
 package com.yu.model;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -8,25 +11,49 @@ public class People implements IHasId {
 
     private long id;
 
-    private int version = 0;
+    private int version;
 
     private Instant creationDate;
 
     private Instant lastUpdated;
 
-    private String firstName;
+    /**
+     * a person that is inactive means we ignore him/her,
+     * it may because we dont care, or he/she is already dead.
+     */
+    private boolean isActive;
 
-    private String lastName;
-
+    /**
+     * name that you call a friend
+     */
     private String nickname;
 
+    @NotNull
     private Gender gender;
 
+    /**
+     * date that this person born, including year,
+     * local to where he/she was born.
+     */
     private LocalDate dateOfBirth;
 
-    private BigDecimal weightInKg;
+    /**
+     * for eastern people, 'family name' that common to all children within a family.
+     */
+    @NotBlank
+    private String firstName;
 
-    private Long bornFamilyId;
+    /**
+     * for western people, 'family name' that common to all children within a family.
+     */
+    @NotBlank
+    private String lastName;
+
+    @DecimalMin("0.01")
+    private BigDecimal heightInCm;
+
+    @DecimalMin("0.01")
+    private BigDecimal weightInKg;
 
     public long getId() {
         return id;
@@ -36,7 +63,7 @@ public class People implements IHasId {
         this.id = id;
     }
 
-    public int getVersion() {
+    public long getVersion() {
         return version;
     }
 
@@ -48,8 +75,48 @@ public class People implements IHasId {
         return creationDate;
     }
 
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public Instant getLastUpdated() {
         return lastUpdated;
+    }
+
+    public void setLastUpdated(Instant lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public String getFirstName() {
@@ -68,28 +135,12 @@ public class People implements IHasId {
         this.lastName = lastName;
     }
 
-    public String getNickname() {
-        return nickname;
+    public BigDecimal getHeightInCm() {
+        return heightInCm;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setHeightInCm(BigDecimal heightInCm) {
+        this.heightInCm = heightInCm;
     }
 
     public BigDecimal getWeightInKg() {
@@ -98,13 +149,5 @@ public class People implements IHasId {
 
     public void setWeightInKg(BigDecimal weightInKg) {
         this.weightInKg = weightInKg;
-    }
-
-    public Long getBornFamilyId() {
-        return bornFamilyId;
-    }
-
-    public void setBornFamilyId(Long bornFamilyId) {
-        this.bornFamilyId = bornFamilyId;
     }
 }

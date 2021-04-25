@@ -1,0 +1,242 @@
+#%RAML 1.0
+title: mybatis-spring-hello REST API
+version: 1.0.0
+description: |
+  hello world project, with RESTful api, built with spring boot + mybatis.
+types:
+  Decimal:
+    description: |
+      decimal number: a numeric value with precise decimal places
+      (instead of floating-point based).
+  LocalDate:
+    description: date without time, formatted like this `2017-10-24`.
+  DateTime:
+    description: instant of time without time zone concept.
+  VersionDto:
+    description: |
+      only for defining version number of something.
+    example: |
+      {
+        "version": 1
+      }
+  CountDto:
+    example: |
+      {
+        "count": 1200
+      }
+  People:
+    type: object
+    examples:
+      general: |
+        {
+          "id": "33007",
+          "version": 1,
+          "creationDate": "2021-01-13T03:58:49Z",
+          "lastUpdated": "2021-01-13T03:58:49Z",
+          "nickname": "Johnson",
+          "gender": "MALE",
+          "dateOfBirth": "1995-07-24",
+          "firstName": "Johnson",
+          "lastName": "Li",
+          "heightInCm": 162.00,
+          "weightInKg": 65.1000,
+          "active": true
+        }
+  Family:
+    type: object
+    examples:
+      general: |
+        {
+          "id": 2,
+          "version": 1,
+          "creationDate": "2018-06-09T15:54:04Z",
+          "father": {
+            "id": 10,
+            "version": 1,
+            "creationDate": "2018-06-09T12:38:56Z",
+            "firstName": "Coriss",
+            "lastName": "Morse",
+            "gender": "MALE",
+            "dateOfBirth": "1986-08-25"
+          },
+          "mother": {
+            "id": 11,
+            "version": 1,
+            "creationDate": "2018-06-09T12:38:56Z",
+            "firstName": "Teddie",
+            "lastName": "Hancock",
+            "gender": "FEMALE",
+            "dateOfBirth": "2014-03-04"
+          },
+          "children": [
+            {
+              "id": "33007",
+              "version": 1,
+              "creationDate": "2021-01-13T03:58:49Z",
+              "lastUpdated": "2021-01-13T03:58:49Z",
+              "nickname": "Johnson",
+              "gender": "MALE",
+              "dateOfBirth": "1995-07-24",
+              "firstName": "Johnson",
+              "lastName": "Li",
+              "heightInCm": 162.00,
+              "weightInKg": 65.1000,
+              "active": true
+            }, {}, {}
+          ]
+        }
+
+baseUri: http://localhost:8080
+
+/api:
+  /people:
+    get:
+      queryParameters:
+        offset: integer
+        size: integer
+        activeOnly: boolean
+      responses:
+        200:
+          body:
+            application/json:
+              type: People[]
+    post:
+      body:
+        application/json:
+          type: People
+      responses:
+        200:
+          body:
+            application/json:
+              type: People
+    /{id}:
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                type: People
+      put:
+        body:
+          application/json:
+            type: People
+        responses:
+          200:
+            body:
+              application/json:
+                type: People
+      delete:
+        body:
+          application/json:
+            type: VersionDto
+        responses:
+          200:
+            body:
+              application/json:
+                type: People
+      /disable:
+        body:
+          application/json:
+            type: VersionDto
+        responses:
+          200:
+            body:
+              application/json:
+                type: People
+      /wife:
+        get:
+          responses:
+            200:
+              body:
+                application/json:
+                  type: People
+      /husband:
+        get:
+          responses:
+            200:
+              body:
+                application/json:
+                  type: People
+      /asFather:
+        /family:
+          get:
+            responses:
+            200:
+              body:
+                application/json:
+                  type: Family
+      /updatePeopleWithNames:
+        put:
+          body:
+            application/json:
+              type: object
+              example: |
+                {
+                  "version": 1,
+                  "firstName": "peter",
+                  "lastName": "Li",
+                  "nickname": "The Fool"
+                }
+          responses:
+            200:
+              body:
+                application/json:
+                  type: People
+    /count:
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                type: CountDto
+    /createByNamesAndGender:
+      post:
+        body:
+          application/json:
+            type: object
+            example: |
+              {
+                "firstName": "peter",
+                "lastName": "Li",
+                "nickname": "The Fool",
+                "gender": "MALE"
+              }
+        responses:
+          200:
+            body:
+              application/json:
+                type: People
+  /family:
+    get:
+      queryParameters:
+        offset: integer
+        size: integer
+      responses:
+        200:
+          body:
+            application/json:
+              type: Family[]
+    post:
+      body:
+        application/json:
+          type: Family
+      responses:
+        200:
+          body:
+            application/json:
+              type: Family
+    /{id}:
+      get:
+        queryParameters:
+          includeChildren: boolean
+        responses:
+          200:
+            body:
+              application/json:
+                type: Family
+      /children:
+        responses:
+          200:
+            body:
+              application/json:
+                type: People[]

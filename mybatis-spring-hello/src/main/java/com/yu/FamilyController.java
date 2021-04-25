@@ -1,7 +1,10 @@
 package com.yu;
 
+import com.yu.exception.InconsistencyDataException;
+import com.yu.exception.RecordNotFoundException;
 import com.yu.model.Family;
 import com.yu.model.Gender;
+import com.yu.model.IdPair;
 import com.yu.model.People;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@RequestMapping("/hello/family")
+@RequestMapping("/api/family")
 @RestController()
 public class FamilyController {
 
@@ -25,6 +32,9 @@ public class FamilyController {
     @Autowired
     private PeopleMapper peopleMapper;
 
+    private static final long PAGE_SIZE_MIN = 1;
+    private static final long PAGE_SIZE_SAFE_LIMIT = 100;
+
     private static final Logger logger = LoggerFactory.getLogger(FamilyController.class);
 
     @ExceptionHandler(RuntimeException.class)
@@ -32,6 +42,25 @@ public class FamilyController {
     public Map<String, String> throwable(Throwable throwable) {
         logger.error("Uncaught throwable", throwable);
         return Collections.singletonMap("message", throwable.getMessage());
+    }
+
+    @ExceptionHandler(RecordNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> failByRecordNotFound(RecordNotFoundException exception){
+        return Collections.singletonMap("errorCode", "RECORD_NOT_FOUND");
+    }
+
+    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> mvcValidationFailure(Throwable exception) {
+        logger.error("mvcValidationFailure", exception);
+        return Collections.singletonMap("errorCode", "VALIDATION_ERROR");
+    }
+
+    @ExceptionHandler(InconsistencyDataException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> failByDataInconsistency(InconsistencyDataException exception){
+        return Collections.singletonMap("errorCode", "DATA_INCONSISTENCY");
     }
 
     @GetMapping("/{id}")
@@ -51,6 +80,17 @@ public class FamilyController {
         return family;
     }
 
+    @GetMapping("")
+    public List<Family> listAllFamily(
+            @RequestParam(value = "offset", defaultValue = "0") long offset,
+            @RequestParam(value = "size", defaultValue = "10") long size
+    ){
+        long safePageSize = Math.max(Math.min(size, PAGE_SIZE_SAFE_LIMIT), PAGE_SIZE_MIN);
+        List<Family> list;
+        list = this.familyMapper.listAllFamily(offset, safePageSize);
+        return list;
+    }
+
     @GetMapping("/{id}/children")
     public List<People> findFamilyChildrenById(
             @PathVariable("id") long id
@@ -61,7 +101,7 @@ public class FamilyController {
     @Transactional
     @PostMapping("")
     public Family createFamily(
-            @RequestBody() Family family
+            @Valid @RequestBody() Family family
     ){
         People father = this.peopleMapper.findPeopleById(family.getFatherId());
         People mother = this.peopleMapper.findPeopleById(family.getMotherId());
@@ -75,27 +115,28 @@ public class FamilyController {
         } else if (mother.getGender() != Gender.FEMALE) {
             throw new RuntimeException("invalid mother with id: "+family.getMotherId());
         }
-//        List<People> childrenOfFamily = this.peopleMapper.findPeopleByIdList(
-//            ModelUtil.idList(family.getChildren())
-//        );
-//        if (childrenOfFamily.size() != family.getChildren().size()) {
-//            logger.warn("got children in db: ({})",
-//                String.join(",",
-//                    childrenOfFamily.stream().map(p->String.valueOf(p.getId())).collect(Collectors.toList())
-//                )
-//            );
-//            throw new RuntimeException("invalid children");
-//        }
+        if (family.getChildren() != null) {
+            List<Long> childrenIdList = family.getChildren().stream().map(child -> child.getId()).collect(Collectors.toList());
+            List<People> childrenList = this.peopleMapper.findPeopleByIdList(childrenIdList);
+            if (childrenIdList.size() != childrenList.size()) {
+                List<String> idListInStr = childrenIdList.stream().map(it -> it.toString()).collect(Collectors.toList());
+                throw new RuntimeException("failed to locate some of children: "
+                        +String.join(", ", idListInStr));
+            }
+        }
 
         long familyCreated = this.familyMapper.insertFamily(family);
         if (familyCreated < 1) {
             throw new RuntimeException("failed to create family");
         }
-        long peopleUpdated = this.peopleMapper.assignBornFamilyToPeople(
-                ModelUtil.idList(family.getChildren()),
-                family.getId());
-        if (peopleUpdated != family.getChildren().size()) {
-            throw new RuntimeException("failed to assign family to children");
+        if (!family.getChildren().isEmpty()) {
+            List<IdPair> childMappingList = family.getChildren().stream().map(child -> {
+                return new IdPair(family.getId(), child.getId());
+            }).collect(Collectors.toList());
+            long childMappingCreated = this.familyMapper.insertFamilyChild(childMappingList);
+            if (childMappingCreated != family.getChildren().size()) {
+                throw new RuntimeException("failed to assign family to children");
+            }
         }
         return this.findFamilyById(family.getId(), true);
     }
