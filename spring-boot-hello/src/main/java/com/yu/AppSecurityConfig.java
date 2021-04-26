@@ -14,7 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${apiMeta.path}")
+    @Value("${hello.api-base-url}")
     protected String urlPrefixForEndpoints;
 
     private static final Logger logger = LoggerFactory.getLogger(AppSecurityConfig.class);

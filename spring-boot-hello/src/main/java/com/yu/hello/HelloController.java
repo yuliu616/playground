@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,11 +36,14 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("${apiMeta.path}")
+@RequestMapping("${hello.api-base-url}")
 public class HelloController {
 
-    @Value("${hello.serviceName}")
-    protected String appServiceName;
+    @Value("${hello.service-name}")
+    protected String serviceName;
+
+    @Value("${hello.api-version}")
+    protected String apiVersion;
 
     @Value("${spring.profiles}")
     protected String springProfilesString;
@@ -61,21 +65,27 @@ public class HelloController {
         return Collections.singletonMap("errorCode", "DATA_INCONSISTENCY");
     }
 
-    @RequestMapping(method = RequestMethod.GET,
-            path = "/version",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> appVersion(){
-        logger.debug("appVersion:[{}].", this.appServiceName);
-        Map<String, Object> map = new HashMap<>();
-        map.put("serviceName", this.appServiceName);
-        map.put("springProfiles", this.springProfilesString);
-        map.put("currentTime", Instant.now());
+    @GetMapping("/about")
+    public Map<String, Object> healthCheck(
+            @RequestParam(value = "printLog", defaultValue = "false") boolean printLog)
+    {
+        if (printLog) {
+            logger.trace("healthCheck endpoint invoked");
+            logger.debug("healthCheck endpoint invoked");
+            logger.info("healthCheck endpoint invoked");
+            logger.warn("healthCheck endpoint invoked");
+            logger.error("healthCheck endpoint invoked");
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("apiVersion", this.apiVersion);
+        map.put("serviceName", this.serviceName);
+        map.put("currentTime", java.time.Instant.now());
+        map.put("currentDate", java.time.LocalDate.now());
         return map;
     }
 
-    @RequestMapping(method = RequestMethod.GET,
-            path = "/hi",
-            produces = MediaType.TEXT_PLAIN_VALUE)
+    @GetMapping(path = "/hi", produces = MediaType.TEXT_PLAIN_VALUE)
     public String sayHi(){
         logger.info("someone say hi to me !!!");
         return "hello, i am spring boot hello.";
