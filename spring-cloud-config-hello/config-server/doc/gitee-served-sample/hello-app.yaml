@@ -1,0 +1,4 @@
+hello-app:
+  greeting: hello
+  friend-limit: 5
+  excuse-for-rejecting-new-friend: sorry, mom said i can only have 5 friends.

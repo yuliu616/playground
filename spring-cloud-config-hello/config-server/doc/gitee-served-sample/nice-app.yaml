@@ -1,0 +1,4 @@
+hello-app:
+  greeting: well
+  friend-limit: 0
+  excuse-for-rejecting-new-friend: sorry, i don't like friend.

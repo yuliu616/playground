@@ -1,0 +1,4 @@
+hello-app:
+  greeting: hi
+  friend-limit: 3
+  excuse-for-rejecting-new-friend: sorry, i prefer quality time with my close friends.
