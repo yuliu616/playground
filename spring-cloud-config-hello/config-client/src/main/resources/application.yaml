@@ -1,0 +1,5 @@
+server.port: 8080
+hello-app:
+  greeting: hello
+  friend-limit: 8
+  excuse-for-rejecting-new-friend: sorry, i have short memory, i can't remember too many friend.

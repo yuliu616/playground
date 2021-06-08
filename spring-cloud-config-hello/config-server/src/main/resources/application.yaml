@@ -1,0 +1,10 @@
+server.port: 8888
+spring:
+  cloud:
+    config:
+      server:
+        git:
+#          uri: file://${user.home}/Downloads/hello-config-repo
+          uri: https://gitee.com/yuliu1229/playground
+          search-paths:
+            - spring-cloud-config-hello/config-server/doc/gitee-served-sample
