@@ -1,0 +1,103 @@
+#%RAML 1.0
+title: property-service REST API
+version: 1.0.x
+description: |
+  managing property info (owner, address, etc)
+securitySchemes:
+  Bearer Token in this pattern: `Bearer ${access_token}`.
+types:
+  LocalDate:
+    description: date without time, formatted like this `2017-10-24`.
+  DateTime:
+    description: instant of time without time zone concept.
+  Property:
+    type: object
+    examples:
+      simple:
+        {
+          "id": "24017",
+          "version": 1,
+          "creationDate": "2021-06-16T06:01:31Z",
+          "lastUpdated": "2021-06-16T06:01:31Z",
+          "name": "Apple Store",
+          "ownerId": "33012",
+          "ownershipDate": "2000-06-18",
+          "geoAddrLatitude": 37.3314250294977600,
+          "geoAddrLongitude": -122.0305043416962900,
+          "addrFloorLine": null,
+          "addrBlock": null,
+          "addrStreetAddress": "Infinite Loop 1, 1 Infinite Loop",
+          "addrDistrict": null,
+          "addrArea": "Santa Clara",
+          "addrPostalCode": "95014",
+          "addrCity": "Cupertino",
+          "addrProvince": null,
+          "addrState": "California",
+          "addrCountryCode": "us",
+          "active": true
+        }
+
+baseUri: http://localhost:8083/api
+
+/about:
+  get:
+    queryParameters:
+      printLog:
+        type: boolean
+        default: false
+    response:
+      200:
+        body:
+          application/json:
+            type: object
+            example: |
+              {
+                  "serviceName": "property-service"
+                  "apiVersion": "1.0",
+                  "currentTime": "2020-11-30T02:43:11.856543Z",
+                  "currentDate": "2020-11-30",
+              }
+/property:
+  get:
+    description: |
+      list all properties.
+    queryParameters:
+      offset: integer
+      size: integer
+    responses:
+      200:
+        body:
+          application/json:
+            type: Property[]
+  post:
+    description: |
+      create new Property with the posted data.
+    body:
+      application/json:
+        type: Property
+    responses:
+      200:
+        body:
+          application/json:
+            description: the newly created Property
+            type: Property
+  /{id}:
+    get:
+      description: |
+        get Property with target ID.
+      responses:
+        200:
+          body:
+            application/json:
+              type: Property
+    put:
+      description: |
+        update Property with target ID.
+      body:
+        application/json:
+          type: Property
+      responses:
+        200:
+          body:
+            application/json:
+              type: Property

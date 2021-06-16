@@ -1,0 +1,29 @@
+server.port: 8080
+feign:
+  client:
+    config:
+      auth-service:
+        logger-level: BASIC
+      people-service:
+        logger-level: BASIC
+        request-interceptors:
+          - com.yu.feign.CommonRequestInterceptor
+      property-service:
+        logger-level: BASIC
+        request-interceptors:
+          - com.yu.feign.CommonRequestInterceptor
+
+auth-service:
+  service-name: auth-service
+  api-base-url: http://127.0.0.1:8080/api
+people-service:
+  service-name: people-service
+  api-base-url: http://127.0.0.1:8082/api
+property-service:
+  service-name: property-service
+  api-base-url: http://127.0.0.1:8083/api
+
+hello:
+  auth:
+    username: user1001
+    password: pass1234
