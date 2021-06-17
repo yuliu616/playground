@@ -1,0 +1,16 @@
+server.port: 8080
+spring:
+  application:
+    name: hello-service
+eureka:
+  client:
+    enabled: true # default = true
+    service-url:
+      # defaultZone is a name, you could not change
+      # it to default-zone
+      defaultZone: http://127.0.0.1:8761/eureka/
+
+hello-app:
+  greeting: hello
+  friend-limit: 380
+  excuse-for-rejecting-new-friend: sorry, i have short memory, i can't remember too many friend.

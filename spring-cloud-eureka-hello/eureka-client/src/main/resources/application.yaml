@@ -1,0 +1,22 @@
+server.port: 8090
+spring:
+  application:
+    name: friendly-service
+feign:
+  client:
+    config:
+      hello-service:
+        logger-level: BASIC
+eureka:
+  client:
+    enabled: true # default = true
+    service-url:
+      # defaultZone is a name, you could not change
+      # it to default-zone
+      defaultZone: http://127.0.0.1:8761/eureka/
+
+hello-service:
+  service-name: hello-service
+  # leave api-base-url as blank so that
+  # it will be resolved by service discovery
+  api-base-url:
