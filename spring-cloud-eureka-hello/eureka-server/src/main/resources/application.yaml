@@ -1,0 +1,55 @@
+server.port: 8761
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+---
+# for stand-alone mode (only one server)
+spring:
+  profiles: standalone
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+---
+# for peers mode with 3 servers, each connected to each others
+spring:
+  profiles: eu1
+eureka:
+  instance:
+    hostname: eu1
+  client:
+    service-url:
+      defaultZone: http://eu1:8761/eureka/,http://eu2:8761/eureka/,http://eu3:8761/eureka/
+
+---
+# for peers mode with 3 servers, each connected to each others
+spring:
+  profiles: eu2
+eureka:
+  instance:
+    hostname: eu2
+  client:
+    service-url:
+      defaultZone: http://eu1:8761/eureka/,http://eu2:8761/eureka/,http://eu3:8761/eureka/
+
+---
+# for peers mode with 3 servers, each connected to each others
+spring:
+  profiles: eu3
+eureka:
+  instance:
+    hostname: eu3
+  client:
+    service-url:
+      defaultZone: http://eu1:8761/eureka/,http://eu2:8761/eureka/,http://eu3:8761/eureka/
