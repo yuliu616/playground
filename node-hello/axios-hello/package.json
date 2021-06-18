@@ -1,0 +1,9 @@
+{
+  "name": "axios-hello",
+  "version": "1.0.0",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bluebird": "^3.7.2",
+    "pm2": "^5.1.0"
+  }
+}
