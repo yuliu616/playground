@@ -1,12 +1,11 @@
 let express = require('express');
-let bodyParser = require('body-parser');
 let moment = require('moment');
 
 let app = express();
 let port = 8080;
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({extended:true})); // to enable form-urlencoded
+app.use(express.json()); // for parsing post body in json
+app.use(express.urlencoded({ extended:true })); // to enable form-urlencoded
 
 app.use(express.static('public'));
 
