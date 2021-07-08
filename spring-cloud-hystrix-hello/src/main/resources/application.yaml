@@ -1,0 +1,26 @@
+server.port: 8080
+management.endpoints.web.exposure.include: health,auditevents,beans,caches,conditions,configprops,env,flyway,heapdump,httptrace,info,integrationgraph,jolokia,logfile,loggers,liquibase,metrics,mappings,prometheus,quartz,scheduledtasks,sessions,shutdown,startup,threaddump
+spring:
+  application:
+    name: hystrix-hello
+feign:
+  client:
+    config:
+      people-service:
+        logger-level: BASIC
+        request-interceptors:
+          - com.yu.feign.HardcodedFeignRequestInterceptor
+eureka:
+  client:
+    enabled: true # default = true
+    service-url:
+      # defaultZone is a name, you could not change
+      # it to default-zone
+      defaultZone: http://127.0.0.1:8761/eureka/
+
+
+people-service:
+  service-name: people-service
+  # leave this blank means use eureka-server to resolve
+  service-url:
+  api-base-url: /api/1.0
