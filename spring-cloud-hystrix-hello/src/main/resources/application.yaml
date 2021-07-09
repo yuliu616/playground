@@ -1,5 +1,5 @@
 server.port: 8080
-management.endpoints.web.exposure.include: health,auditevents,beans,caches,conditions,configprops,env,flyway,heapdump,httptrace,info,integrationgraph,jolokia,logfile,loggers,liquibase,metrics,mappings,prometheus,quartz,scheduledtasks,sessions,shutdown,startup,threaddump
+management.endpoints.web.exposure.include: health,auditevents,beans,caches,conditions,configprops,env,flyway,heapdump,httptrace,info,integrationgraph,jolokia,logfile,loggers,liquibase,metrics,mappings,prometheus,quartz,scheduledtasks,sessions,shutdown,startup,threaddump,hystrix.stream
 spring:
   application:
     name: hystrix-hello
@@ -17,7 +17,38 @@ eureka:
       # defaultZone is a name, you could not change
       # it to default-zone
       defaultZone: http://127.0.0.1:8761/eureka/
-
+hystrix:
+  command:
+    lucky:
+      circuitBreaker:
+        enabled: true
+        requestVolumeThreshold: 2
+        errorThresholdPercentage: 50
+        sleepWindowInMilliseconds: 10000
+        forceOpen: false
+        forceClosed: false
+    slowA:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000
+    slowB:
+      execution:
+        timeout:
+          enabled: false
+        isolation:
+          strategy: SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 2
+    findPeopleById:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10
 
 people-service:
   service-name: people-service

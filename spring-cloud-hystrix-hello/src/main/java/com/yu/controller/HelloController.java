@@ -1,5 +1,7 @@
 package com.yu.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.yu.exception.MyValidationException;
 import com.yu.model.people.People;
 import com.yu.service.PeopleService;
@@ -38,6 +40,15 @@ public class HelloController {
     }
 
     @GetMapping("/lucky")
+    @HystrixCommand(
+//        commandProperties={
+//            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+//            @HystrixProperty(name = "circuitBreaker.forceOpen", value = "false"),
+//        }
+    )
     public String lucky(){
         if (Math.random() < 0.5) {
             throw new RuntimeException("sorry, you are bad luck.");
@@ -61,18 +72,59 @@ public class HelloController {
     }
 
     @GetMapping("/slow/a")
+    @HystrixCommand(fallbackMethod = "slowFallback",
+        ignoreExceptions = { MyValidationException.class }
+//        commandProperties={
+//                @HystrixProperty(name = "execution.timeout.enabled", value="true"),
+//                @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value="6000"),
+//        }
+    )
     public String slowA(@RequestParam(value = "wait", defaultValue = "1000") int wait){
         waitAwhile(wait);
         return "ok now.";
     }
 
     @GetMapping("/slow/b")
+    @HystrixCommand(
+//        commandProperties={
+//            @HystrixProperty(name = "execution.timeout.enabled", value="true"),
+//            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests", value = "2"),
+//            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+//        }
+    )
     public String slowB(@RequestParam(value = "wait", defaultValue = "1000") int wait){
         waitAwhile(wait);
         return "ok now.";
     }
 
+    public String slowFallback(int wait, Throwable causeOfFallback){
+        logger.warn("hystrix: fallback invoked.", causeOfFallback);
+        String message;
+        if (causeOfFallback instanceof javax.validation.ValidationException) {
+            message = "Validation";
+        } else if (causeOfFallback instanceof com.netflix.hystrix.exception.HystrixTimeoutException) {
+            message = "HystrixTimeout";
+        } else if (causeOfFallback instanceof java.lang.RuntimeException &&
+                causeOfFallback.getMessage().equals("could not acquire a semaphore for execution"))
+        {
+            message = "caused by maxConcurrentRequests";
+        } else if (causeOfFallback instanceof java.lang.RuntimeException &&
+                causeOfFallback.getMessage().equals("Hystrix circuit short-circuited and is OPEN"))
+        {
+            message = "caused by circuit OPEN";
+        } else {
+            message = "anyway";
+        }
+        return "hystrix fallback occurred: "+message;
+    }
+
     @GetMapping("/people/{id}")
+    @HystrixCommand(
+//        commandProperties={
+//            @HystrixProperty(name = "execution.timeout.enabled", value="true"),
+//            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value="10"),
+//        }
+    )
     public People findPeopleById(@PathVariable("id") String id) {
         logger.info("HelloController: route call to peopleService: findPeopleById({})", id);
         People result = this.peopleService.findPeopleById(id);

@@ -29,7 +29,7 @@ public interface PeopleService {
             @RequestParam(value = "size", defaultValue = "10") long size
     );
 
-    @GetMapping("/search/withIdList")
+    @GetMapping("/people/search/withIdList")
     public List<People> listPeopleByIdList(
             @RequestParam("idList") String idListStr
     );

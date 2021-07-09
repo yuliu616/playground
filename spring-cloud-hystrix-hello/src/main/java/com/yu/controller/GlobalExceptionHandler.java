@@ -83,6 +83,13 @@ public class GlobalExceptionHandler {
         return new ErrorCodeDto(ERROR_INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(com.netflix.hystrix.exception.HystrixRuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorCodeDto hystrixRuntimeFailure(com.netflix.hystrix.exception.HystrixRuntimeException exception){
+        logger.warn("HystrixRuntimeException: {}", exception.getMessage(), exception);
+        return new ErrorDto("HystrixRuntimeException", new Object[]{ exception.getMessage() });
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorCodeDto generalRuntimeException(RuntimeException exception){
