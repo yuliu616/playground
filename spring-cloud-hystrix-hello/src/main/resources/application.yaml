@@ -10,6 +10,10 @@ feign:
         logger-level: BASIC
         request-interceptors:
           - com.yu.feign.HardcodedFeignRequestInterceptor
+      property-service:
+        logger-level: BASIC
+        request-interceptors:
+          - com.yu.feign.HardcodedFeignRequestInterceptor
 eureka:
   client:
     enabled: true # default = true
@@ -52,6 +56,12 @@ hystrix:
 
 people-service:
   service-name: people-service
+  # leave this blank means use eureka-server to resolve
+  service-url:
+  api-base-url: /api/1.0
+
+property-service:
+  service-name: property-service
   # leave this blank means use eureka-server to resolve
   service-url:
   api-base-url: /api/1.0

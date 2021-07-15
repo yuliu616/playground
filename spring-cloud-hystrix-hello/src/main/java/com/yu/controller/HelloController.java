@@ -4,7 +4,9 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.yu.exception.MyValidationException;
 import com.yu.model.people.People;
+import com.yu.model.property.Property;
 import com.yu.service.PeopleService;
+import com.yu.service.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class HelloController {
 
     @Autowired
     protected PeopleService peopleService;
+
+    @Autowired
+    protected PropertyService propertyService;
 
     @Autowired
     protected CurrentTimeController currentTimeController;
@@ -131,5 +136,11 @@ public class HelloController {
         return result;
     }
 
+    @GetMapping("/property/{id}")
+    public Property findPropertyById(@PathVariable("id") String id) {
+        logger.info("HelloController: route call to propertyService: findPropertyById({})", id);
+        Property result = this.propertyService.findPropertyById(id);
+        return result;
+    }
 
 }
