@@ -3,6 +3,22 @@ management.endpoints.web.exposure.include: health,auditevents,beans,caches,condi
 spring:
   application:
     name: hystrix-hello
+  cloud:
+    loadbalancer:
+      stats:
+        micrometer:
+          enabled: true
+      ribbon:
+        enabled: false
+      health-check:
+        initial-delay: 0
+        interval: 5000
+        refetch-instances-interval: 30000
+        refetch-instances: true
+        repeat-health-check: true
+        path: #key/value (key: service name, value: uri)
+          people-service: /api/1.0/about
+          property-service: /api/1.0/about
 feign:
   client:
     config:
