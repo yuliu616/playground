@@ -1,0 +1,25 @@
+server.port: 8888
+management.endpoints.web.exposure.include: metrics,routes,filters
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+hystrix:
+  command:
+    people-service:
+      execution.timeout.enabled: false
+    property-service:
+      execution.timeout.enabled: false
+zuul:
+  forceOriginalQueryStringEncoding: true
+  decodeUrl: false
+  ignoredServices: '*'
+  routes:
+    people-service:
+      serviceId: people-service
+      path: /people-service/**
+      sensitiveHeaders: Cookie,Set-Cookie
+    property-service:
+      serviceId: property-service
+      path: /property-service/**
+      sensitiveHeaders: Cookie,Set-Cookie
