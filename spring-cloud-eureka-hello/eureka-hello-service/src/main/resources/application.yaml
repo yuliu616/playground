@@ -2,6 +2,9 @@ server.port: 8080
 spring:
   application:
     name: hello-service
+  zipkin:
+    enabled: true # default = true
+    baseUrl: http://127.0.0.1:9411
 eureka:
   client:
     enabled: true # default = true

@@ -2,6 +2,9 @@ server.port: 8090
 spring:
   application:
     name: friendly-service
+  zipkin:
+    enabled: true # default = true
+    baseUrl: http://127.0.0.1:9411
 feign:
   client:
     config:
