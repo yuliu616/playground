@@ -1,0 +1,24 @@
+management.endpoints.web.exposure.include: gateway
+
+server.port: 8888
+spring:
+  application.name: api-gateway
+  cloud:
+    gateway:
+      enabled: true # default = true
+      metrics.enabled: true # default = true
+      routes:
+      # simple routing with prefix (while path rewritten to remove the prefix)
+      - id: route1
+        uri: http://127.0.0.1:8080
+        predicates:
+        - Path=/api/hello-service/1.0/**
+        filters:
+        - RewritePath=/api/hello-service/(?<segment>/?.*), /api/$\{segment}
+      # simple routing with prefix (while path rewritten to remove the prefix)
+      - id: route2
+        uri: http://127.0.0.1:8082
+        predicates:
+          - Path=/api/people-service/1.0/**
+        filters:
+          - RewritePath=/api/people-service/(?<segment>/?.*), /api/$\{segment}
