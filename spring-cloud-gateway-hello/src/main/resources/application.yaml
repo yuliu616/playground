@@ -3,6 +3,9 @@ management.endpoints.web.exposure.include: gateway
 server.port: 8888
 spring:
   application.name: api-gateway
+  zipkin:
+    enabled: true
+    baseUrl: http://127.0.0.1:9411
   cloud:
     gateway:
       enabled: true # default = true
@@ -22,3 +25,10 @@ spring:
           - Path=/api/people-service/1.0/**
         filters:
           - RewritePath=/api/people-service/(?<segment>/?.*), /api/$\{segment}
+      # routing to eureka defined service (while path rewritten to remove the prefix)
+      - id: route3
+        uri: lb://property-service
+        predicates:
+          - Path=/api/property-service/1.0/**
+        filters:
+          - RewritePath=/api/property-service/(?<segment>/?.*), /api/$\{segment}
