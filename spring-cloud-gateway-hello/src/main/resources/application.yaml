@@ -29,6 +29,43 @@ spring:
       - id: route3
         uri: lb://property-service
         predicates:
+          - Method=GET
           - Path=/api/property-service/1.0/**
         filters:
           - RewritePath=/api/property-service/(?<segment>/?.*), /api/$\{segment}
+      # route with circuitBreaker for the proxy
+      - id: route4
+        uri: lb://property-service
+        predicates:
+          - Method=POST,PUT
+          - Path=/api/property-service/1.0/**
+        filters:
+          - RewritePath=/api/property-service/(?<segment>/?.*), /api/$\{segment}
+          - name: CircuitBreaker
+            args:
+              name: myCircuitBreaker
+              statusCodes:
+                - 500
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      register-health-indicator: true
+      failure-rate-threshold: 50
+      minimum-number-of-calls: 6
+      sliding-window-size: 4
+      sliding-window-type: COUNT_BASED
+      ring-buffer-size-in-closed-state: 10
+      ring-buffer-size-in-half-open-state: 3
+      eventConsumerBufferSize: 10
+      permitted-number-of-calls-in-half-open-state: 1
+      automatic-transition-from-open-to-half-open-enabled: true
+      wait-duration-in-open-state: 10s
+      recordExceptions:
+      - org.springframework.web.client.HttpServerErrorException
+      - java.io.IOException
+      - java.lang.NullPointerException
+      - java.lang.RuntimeException
+      - java.util.concurrent.TimeoutException
+  instances:
+    myCircuitBreaker:
+      baseConfig: default
