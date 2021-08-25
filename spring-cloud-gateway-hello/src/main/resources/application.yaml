@@ -46,6 +46,38 @@ spring:
               name: myCircuitBreaker
               statusCodes:
                 - 500
+      # limit requests rate for login/refresh login
+      - id: route5
+        uri: lb://auth-service
+        predicates:
+          - Method=GET
+          - Path=/api/auth-service/1.0/**
+        filters:
+          - RewritePath=/api/auth-service/(?<segment>/?.*), /api/$\{segment}
+      - id: route6
+        uri: lb://auth-service
+        predicates:
+          - Method=POST
+          - Path=/api/auth-service/1.0/login
+        filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 20
+            redis-rate-limiter.burstCapacity: 20
+            redis-rate-limiter.requestedTokens: 1
+        - SetPath=/api/1.0/login
+      - id: route7
+        uri: lb://auth-service
+        predicates:
+          - Method=POST
+          - Path=/api/auth-service/1.0/login/refreshToken
+        filters:
+          - name: RequestRateLimiter
+            args:
+              redis-rate-limiter.replenishRate: 80
+              redis-rate-limiter.burstCapacity: 80
+              redis-rate-limiter.requestedTokens: 1
+          - SetPath=/api/1.0/login/refreshToken
 resilience4j.circuitbreaker:
   configs:
     default:
