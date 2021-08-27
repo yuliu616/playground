@@ -10,6 +10,9 @@ spring:
     gateway:
       enabled: true # default = true
       metrics.enabled: true # default = true
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 15s
       routes:
       # simple routing with prefix (while path rewritten to remove the prefix)
       - id: route1
@@ -65,7 +68,23 @@ spring:
             redis-rate-limiter.replenishRate: 20
             redis-rate-limiter.burstCapacity: 20
             redis-rate-limiter.requestedTokens: 1
+        - name: Retry
+          args:
+            retries: 3
+            methods: POST
+            statuses:
+              - TOO_MANY_REQUESTS
+              - GATEWAY_TIMEOUT
+            series: # default = SERVER_ERROR/5xx
+              - SERVER_ERROR
+            backoff: # formula:  t = firstBackoff * (factor ^ n)
+              firstBackoff: 3000ms
+              maxBackoff: 30000ms
+              factor: 2
+              basedOnPreviousValue: false
         - SetPath=/api/1.0/login
+        metadata:
+          response-timeout: 50
       - id: route7
         uri: lb://auth-service
         predicates:
