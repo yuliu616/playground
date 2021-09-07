@@ -48,4 +48,8 @@
     <appender-ref ref="sout" />
   </logger>
 
+  <logger level="debug" name="org.springframework.cloud.loadbalancer">
+    <appender-ref ref="sout" />
+  </logger>
+
 </configuration>

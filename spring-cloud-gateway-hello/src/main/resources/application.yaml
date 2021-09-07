@@ -7,6 +7,17 @@ spring:
     enabled: true
     baseUrl: http://127.0.0.1:9411
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+      health-check:
+        initial-delay: 0
+        interval: 5000 #ms
+        refetch-instances-interval: 5000 #ms
+        refetch-instances: true
+        repeat-health-check: true
+        path:
+          auth-service: /api/1.0/about
     gateway:
       enabled: true # default = true
       metrics.enabled: true # default = true
