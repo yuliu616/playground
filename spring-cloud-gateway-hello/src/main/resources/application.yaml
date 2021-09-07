@@ -18,6 +18,7 @@ spring:
         repeat-health-check: true
         path:
           auth-service: /api/1.0/about
+          property-service: /api/1.0/about
     gateway:
       enabled: true # default = true
       metrics.enabled: true # default = true
@@ -131,3 +132,7 @@ resilience4j.circuitbreaker:
   instances:
     myCircuitBreaker:
       baseConfig: default
+load-balancer-custom-config:
+  services:
+  - auth-service
+  - property-service
