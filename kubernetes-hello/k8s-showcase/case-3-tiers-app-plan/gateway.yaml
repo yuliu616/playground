@@ -1,0 +1,83 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-web
+  labels:
+    app: gui-web-vue
+    tier: web
+    env: debug
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /.*
+            pathType: Prefix
+            backend:
+              service:
+                name: html-service
+                port:
+                  number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-auth-service
+  labels:
+    app: auth-service
+    tier: app
+    env: debug
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/auth-service/1.0/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 8080
+          - path: /api/auth-service/(about)
+            pathType: Exact
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-people-service
+  labels:
+    app: people-service
+    tier: app
+    env: debug
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/people-service/1.0/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: people-service
+                port:
+                  number: 8082
+          - path: /api/people-service/(about)
+            pathType: Exact
+            backend:
+              service:
+                name: people-service
+                port:
+                  number: 8082

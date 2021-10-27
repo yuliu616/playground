@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: hello-world
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector: # condition for Pod of this Deployment
+    matchLabels:
+      app: nginx
+      env: debug
+  template: # definition to create Pod(s)
+    metadata:
+      labels: # apply these labels to the Pod
+        app: nginx
+        env: debug
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.21.0
+          ports:
+            - containerPort: 80
+      restartPolicy: Always

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: static-web-plan
+  labels:
+    app: gui-web-vue
+    tier: web
+    env: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: html-app
+      tier: web
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: html-app
+        tier: web
+        env: debug
+    spec:
+      containers:
+        - name: gui-web-vue
+          image: gui-web-vue:1.0
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hello-world
+  name: html-service
+  labels:
+    app: html
+    tier: web
+    env: debug
+spec:
+  selector:
+    app: html-app
+    tier: web
+    env: debug
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080 # the port that the app serving

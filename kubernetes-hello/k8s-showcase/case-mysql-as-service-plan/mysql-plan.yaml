@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: mysql-plan
+  labels:
+    app: mysql
+    tier: db
+    env: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-app
+      tier: db
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: mysql-app
+        tier: db
+        env: debug
+    spec:
+      containers:
+        - name: mysql
+          image: mysql/mysql-server:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-misc-options
+                  key: rootPass
+          volumeMounts:
+            - name: mysql-conf
+              mountPath: /etc/my.cnf
+              subPath: my.cnf
+            - name: data-vol
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-conf
+          configMap:
+            name: mysql-config-file
+        - name: data-vol
+          persistentVolumeClaim:
+            claimName: mysql-vol-claim
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hello-world
+  name: mysql
+  labels:
+    app: mysql
+    tier: db
+    env: debug
+spec:
+  selector:
+    app: mysql-app
+    tier: db
+    env: debug
+  ports:
+    - protocol: TCP
+      port: 3306
