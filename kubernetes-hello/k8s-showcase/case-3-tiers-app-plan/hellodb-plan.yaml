@@ -4,7 +4,7 @@ metadata:
   namespace: hello-world
   name: hellodb-plan
   labels:
-    app: mysql
+    app: hellodb
     tier: db
     env: debug
 spec:
@@ -22,7 +22,7 @@ spec:
         env: debug
     spec:
       containers:
-        - name: mysql
+        - name: hellodb-db
           image: mysql/mysql-server:8.0
           ports:
             - containerPort: 3306

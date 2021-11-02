@@ -52,7 +52,7 @@ metadata:
   namespace: hello-world
   name: people-service
   labels:
-    app: people-app
+    app: people-service
     tier: app
     env: debug
 spec:

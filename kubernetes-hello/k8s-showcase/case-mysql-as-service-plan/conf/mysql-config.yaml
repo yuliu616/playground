@@ -4,5 +4,7 @@ immutable: false
 metadata:
   namespace: hello-world
   name: mysql-misc-options
+  labels:
+    type: conf
 data:
   rootPass: "pass1234"

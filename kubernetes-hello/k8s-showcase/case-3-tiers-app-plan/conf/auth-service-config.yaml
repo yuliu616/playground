@@ -4,6 +4,8 @@ immutable: false
 metadata:
   namespace: hello-world
   name: auth-service-config
+  labels:
+    type: conf
 data:
   "application.yaml": |
     server.port: 8080

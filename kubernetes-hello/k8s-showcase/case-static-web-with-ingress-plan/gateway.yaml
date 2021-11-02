@@ -5,7 +5,7 @@ metadata:
   name: ingress-web
   labels:
     app: gui-web-vue
-    tier: web
+    tier: gateway
     env: debug
 spec:
   ingressClassName: nginx

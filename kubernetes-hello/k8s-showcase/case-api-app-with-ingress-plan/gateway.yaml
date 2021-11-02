@@ -5,7 +5,7 @@ metadata:
   name: ingress-people-service
   labels:
     app: people-service
-    tier: app
+    tier: gateway
     env: debug
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1

@@ -5,7 +5,7 @@ metadata:
   name: ingress-web
   labels:
     app: gui-web-vue
-    tier: web
+    tier: gateway
     env: debug
 spec:
   ingressClassName: nginx
@@ -27,7 +27,7 @@ metadata:
   name: ingress-auth-service
   labels:
     app: auth-service
-    tier: app
+    tier: gateway
     env: debug
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1
@@ -58,7 +58,7 @@ metadata:
   name: ingress-people-service
   labels:
     app: people-service
-    tier: app
+    tier: gateway
     env: debug
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1

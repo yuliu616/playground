@@ -3,14 +3,19 @@ kind: PersistentVolume
 metadata:
   name: hellodb-vol
   labels:
+    type: pv
+    app: "hellodb"
     format: "mysql"
+    tier: db
+    env: debug
 spec:
   capacity:
     storage: 10Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  # for ease of local debugging, use "Retain"
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /Users/Shared/k8s-volumes/hellodb-vol
@@ -28,6 +33,11 @@ kind: PersistentVolumeClaim
 metadata:
   namespace: hello-world
   name: hellodb-vol-claim
+  labels:
+    app: hellodb
+    format: mysql
+    tier: db
+    env: debug
 spec:
   accessModes:
     - ReadWriteOnce
@@ -38,4 +48,7 @@ spec:
   storageClassName: local-storage
   selector:
     matchLabels:
+      app: "hellodb"
       format: "mysql"
+      tier: db
+      env: debug

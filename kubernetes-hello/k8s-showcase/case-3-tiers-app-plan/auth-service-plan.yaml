@@ -52,7 +52,7 @@ metadata:
   namespace: hello-world
   name: auth-service
   labels:
-    app: auth-app
+    app: auth-service
     tier: app
     env: debug
 spec:

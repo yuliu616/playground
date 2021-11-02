@@ -4,6 +4,8 @@ immutable: false
 metadata:
   namespace: hello-world
   name: mysql-config-file
+  labels:
+    type: conf
 data:
   my.cnf: |
     [mysqld]

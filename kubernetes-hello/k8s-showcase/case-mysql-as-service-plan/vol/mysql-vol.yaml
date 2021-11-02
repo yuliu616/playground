@@ -3,14 +3,19 @@ kind: PersistentVolume
 metadata:
   name: mysql-vol
   labels:
+    type: pv
+    app: "mysql"
     format: "mysql"
+    tier: db
+    env: debug
 spec:
   capacity:
     storage: 2Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+  # for ease of local debugging, use "Retain"
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
     path: /Users/Shared/k8s-volumes/mysql-vol
@@ -28,6 +33,11 @@ kind: PersistentVolumeClaim
 metadata:
   namespace: hello-world
   name: mysql-vol-claim
+  labels:
+    app: mysql
+    format: mysql
+    tier: db
+    env: debug
 spec:
   accessModes:
     - ReadWriteOnce
@@ -38,4 +48,7 @@ spec:
   storageClassName: local-storage
   selector:
     matchLabels:
+      app: "mysql"
       format: "mysql"
+      tier: db
+      env: debug
