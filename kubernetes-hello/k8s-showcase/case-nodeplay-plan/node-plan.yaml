@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: nodeplay
+  labels:
+    app: nodeplay
+    tier: app
+    env: debug
+spec:
+  selector:
+    matchLabels:
+      app: nodeplay
+      tier: app
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: nodeplay
+        tier: app
+        env: debug
+    spec:
+      containers:
+        - name: node
+          image: node:14-slim
+          workingDir: /usr/src/app/express-hello
+          command: [ "/usr/local/bin/node", "." ]
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: nodeplay-vol
+              mountPath: /usr/src/app
+            - name: tool-vol
+              mountPath: /tool
+      volumes:
+        - name: nodeplay-vol
+          persistentVolumeClaim:
+            claimName: nodeplay-vol-claim
+        - name: tool-vol
+          persistentVolumeClaim:
+            claimName: tool-vol-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hello-world
+  name: nodeplay-service
+  labels:
+    app: nodeplay
+    tier: app
+    env: debug
+spec:
+  selector:
+    app: nodeplay
+    tier: app
+    env: debug
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080 # the port that the app serving

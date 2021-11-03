@@ -1,0 +1,12 @@
+{
+  "name": "ls",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "moment": "^2.29.1"
+  }
+}

@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nodeplay-vol
+  labels:
+    type: pv
+    app: nodeplay
+    env: debug
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  # for ease of local debugging, use "Retain"
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /Users/Shared/k8s-volumes/nodeplay-vol
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: hello-world
+  name: nodeplay-vol-claim
+  labels:
+    app: nodeplay
+    env: debug
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-storage
+  selector:
+    matchLabels:
+      app: nodeplay
+      env: debug

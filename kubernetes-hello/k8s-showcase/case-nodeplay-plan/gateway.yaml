@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-nodeplay
+  labels:
+    app: nodeplay
+    tier: gateway
+    env: debug
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/nodeplay/1.0/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: nodeplay-service
+                port:
+                  number: 8080
