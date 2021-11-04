@@ -25,8 +25,8 @@ function serveVerbose(req, res, next){
     console.log(req.query);
   }
   console.log(`request.headers:`);
-  for (let header of req.rawHeaders) {
-    console.log(` >> header[${header}]: ${req.header(header)}`);
+  for (let header in req.headers) {
+    console.log(` >> header[${header}]: ${req.headers[header]}`);
   }
   console.log(`request.body(json/form):`, req.body);
   
