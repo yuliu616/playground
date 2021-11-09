@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+immutable: false
+metadata:
+  namespace: hello-world
+  name: hellodb-config-file
+  labels:
+    type: conf
+data:
+  my.cnf: |
+    [mysqld]
+    skip-host-cache
+    skip-name-resolve
+    datadir=/var/lib/mysql
+    socket=/var/lib/mysql/mysql.sock
+    secure-file-priv=/var/lib/mysql-files
+    user=mysql
+
+    pid-file=/var/run/mysqld/mysqld.pid
+    bind-address = 0.0.0.0

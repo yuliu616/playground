@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: people-plan
+  labels:
+    app: people-service
+    tier: app
+    env: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: people-app
+      tier: app
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: people-app
+        tier: app
+        env: debug
+    spec:
+      containers:
+        - name: people-service
+          image: people-service:1.0
+          ports:
+            - containerPort: 8082
+          volumeMounts:
+            - name: app-conf
+              mountPath: /usr/src/app/application.yaml
+              subPath: application.yaml
+            - name: logger-conf
+              mountPath: /usr/src/app/logback.xml
+              subPath: logback.xml
+            - name: log-vol
+              mountPath: /usr/src/app/log
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+      volumes:
+        - name: app-conf
+          configMap:
+            name: people-service-config
+        - name: logger-conf
+          configMap:
+            name: people-service-logger-config
+        - name: log-vol
+          emptyDir: { }
+      restartPolicy: Always
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: people-plan-scaling
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1beta1
+   kind: Deployment
+   name: people-plan
+ minReplicas: 1
+ maxReplicas: 2
+ targetCPUUtilizationPercentage: 85
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hello-world
+  name: people-service
+  labels:
+    app: people-service
+    tier: app
+    env: debug
+spec:
+  selector:
+    app: people-app
+    tier: app
+    env: debug
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8082 # the port that the app serving
