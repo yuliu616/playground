@@ -15,7 +15,20 @@ app.get('/api/1.0/about', (req, res, next)=>{
   let payload = {
     server: serverRandId,
     time: moment().format(),
+    timeUnix: moment().unix(),
+    timeMs: moment().millisecond(),
     debug: debug,
+  };
+  res.append('Content-Type', 'application/json');
+  res.end(JSON.stringify(payload));
+});
+
+app.post('/api/1.0/debug', (req, res, next)=>{
+  debug = !debug;
+  let msg = `debug toggled, current value=[${debug}].`;
+  console.log(msg);
+  let payload = {
+    text: msg,
   };
   res.append('Content-Type', 'application/json');
   res.end(JSON.stringify(payload));
