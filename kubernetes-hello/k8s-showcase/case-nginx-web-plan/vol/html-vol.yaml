@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: html-vol
+  labels:
+    type: pv
+    app: "nginx"
+    format: "html"
+    tier: web
+    env: debug
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  # for ease of local debugging, use "Retain"
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /Users/Shared/k8s-volumes/html-vol
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: hello-world
+  name: html-vol-claim
+  labels:
+    app: nginx
+    format: html
+    tier: web
+    env: debug
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-storage
+  selector:
+    matchLabels:
+      app: "nginx"
+      format: "html"
+      tier: web
+      env: debug

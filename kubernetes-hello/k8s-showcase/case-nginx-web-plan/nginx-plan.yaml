@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: nginx-plan
+  labels:
+    app: nginx
+    tier: web
+    env: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+      tier: web
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+        tier: web
+        env: debug
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.21.0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: html-vol
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: html-vol
+          persistentVolumeClaim:
+            claimName: html-vol-claim
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hello-world
+  name: nginx-service
+  labels:
+    app: nginx
+    tier: web
+    env: debug
+spec:
+  selector:
+    app: nginx-app
+    tier: web
+    env: debug
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80 # the port that the app serving
