@@ -109,6 +109,11 @@ spring:
               redis-rate-limiter.burstCapacity: 80
               redis-rate-limiter.requestedTokens: 1
           - SetPath=/api/1.0/login/refreshToken
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
 resilience4j.circuitbreaker:
   configs:
     default:
