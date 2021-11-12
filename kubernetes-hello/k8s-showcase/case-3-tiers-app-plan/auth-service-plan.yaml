@@ -35,6 +35,13 @@ spec:
               subPath: logback.xml
             - name: log-vol
               mountPath: /usr/src/app/log
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
       volumes:
         - name: app-conf
           configMap:

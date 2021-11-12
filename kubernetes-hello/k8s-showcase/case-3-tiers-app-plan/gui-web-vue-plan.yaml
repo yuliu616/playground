@@ -26,6 +26,13 @@ spec:
           image: gui-web-vue:1.0
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
       restartPolicy: Always
 ---
 apiVersion: v1

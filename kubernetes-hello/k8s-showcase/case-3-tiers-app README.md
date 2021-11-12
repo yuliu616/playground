@@ -5,6 +5,7 @@
   - database(mysql) container need to be populated (or restored), refer to section "Database Restoration".
   - require docker image `people-service:1.0`.
   - require ingress controller `ingress-nginx` (v4.0.6).
+  - require Kubernetes metrics server (v0.5.1).
 - serving:
   - http at port 80 via ingress.
 

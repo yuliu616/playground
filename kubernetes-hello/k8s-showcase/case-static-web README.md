@@ -3,6 +3,7 @@
 - serving static web.
 - dependency:
   - require docker image `gui-web-vue:1.0`.
+  - require Kubernetes metrics server (v0.5.1).
 - serving:
   - single http server at port 80.
   - no expose to external network.

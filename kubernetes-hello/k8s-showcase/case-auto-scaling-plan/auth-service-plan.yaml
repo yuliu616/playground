@@ -36,12 +36,12 @@ spec:
             - name: log-vol
               mountPath: /usr/src/app/log
           resources:
-            limits:
-              memory: "1024Mi"
-              cpu: "1000m"
             requests:
-              memory: "512Mi"
-              cpu: "250m"
+              cpu: "1000m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
       volumes:
         - name: app-conf
           configMap:

@@ -3,6 +3,7 @@
 - serving mysql as k8s service.
 - dependency:
   - this demo only use public docker images.
+  - require Kubernetes metrics server (v0.5.1).
 - serving:
   - single mysql at port 3306.
   - no expose to external network.

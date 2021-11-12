@@ -32,6 +32,13 @@ spec:
               mountPath: /usr/src/app
             - name: tool-vol
               mountPath: /tool
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
       volumes:
         - name: nodeplay-vol
           persistentVolumeClaim:
