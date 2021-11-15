@@ -27,6 +27,9 @@ spec:
           ports:
             - containerPort: 8080
           volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
             - name: html-vol
               mountPath: /usr/share/nginx/html
           resources:
@@ -37,6 +40,9 @@ spec:
               cpu: "1000m"
               memory: "1024Mi"
       volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-config
         - name: html-vol
           persistentVolumeClaim:
             claimName: html-vol-claim
