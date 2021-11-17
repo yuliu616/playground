@@ -9,13 +9,15 @@ metadata:
 data:
   "nginx.conf": |
     user  nginx;
-    worker_processes  auto;
+    worker_processes  16;
+    worker_rlimit_nofile 25600;
 
     error_log  /var/log/nginx/error.log notice;
     pid        /var/run/nginx.pid;
 
     events {
-        worker_connections  1024;
+        worker_connections 25600;
+        multi_accept on;
     }
 
     http {
@@ -26,7 +28,7 @@ data:
                           '$status $body_bytes_sent "$http_referer" '
                           '"$http_user_agent" "$http_x_forwarded_for"';
 
-        access_log  /var/log/nginx/access.log  main;
+        access_log  /var/log/nginx/access.log main buffer=16k;
 
         sendfile        on;
         #tcp_nopush     on;
