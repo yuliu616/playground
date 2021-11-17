@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: javaplay
+  labels:
+    app: javaplay
+    tier: app
+    env: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: javaplay
+      tier: app
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: javaplay
+        tier: app
+        env: debug
+    spec:
+      containers:
+        - name: javaplay
+          image: spring-boot-hello:1.0
+          command: [ "/bin/sh", "-c" ]
+          args: [ "cp /javaplay/app.jar /usr/src/app/ ; \
+          cd /usr/src/app ; /usr/bin/java -jar /usr/src/app/app.jar \
+--spring.config.location=classpath:/application.yaml,file:/usr/src/app/application.yaml \
+--logging.config=/usr/src/app/logback.xml" ]
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: app-conf
+              mountPath: /usr/src/app/application.yaml
+              subPath: application.yaml
+            - name: logger-conf
+              mountPath: /usr/src/app/logback.xml
+              subPath: logback.xml
+            - name: log-vol
+              mountPath: /usr/src/app/log
+            - name: javaplay-vol
+              mountPath: /javaplay
+            - name: tool-vol
+              mountPath: /tool
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+      volumes:
+        - name: app-conf
+          configMap:
+            name: javaplay-config
+        - name: logger-conf
+          configMap:
+            name: javaplay-logger-config
+        - name: log-vol
+          emptyDir: { }
+        - name: javaplay-vol
+          persistentVolumeClaim:
+            claimName: javaplay-vol-claim
+        - name: tool-vol
+          persistentVolumeClaim:
+            claimName: tool-vol-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hello-world
+  name: javaplay-service
+  labels:
+    app: javaplay
+    tier: app
+    env: debug
+spec:
+  selector:
+    app: javaplay
+    tier: app
+    env: debug
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080 # the port that the app serving

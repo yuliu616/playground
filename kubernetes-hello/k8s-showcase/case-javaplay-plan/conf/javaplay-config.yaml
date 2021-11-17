@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+immutable: false
+metadata:
+  namespace: hello-world
+  name: javaplay-config
+  labels:
+    type: conf
+data:
+  "application.yaml": |
+    server.port: 8080

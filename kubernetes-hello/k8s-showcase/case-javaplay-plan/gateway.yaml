@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-javaplay
+  labels:
+    app: javaplay
+    tier: gateway
+    env: debug
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$1
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/javaplay/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: javaplay-service
+                port:
+                  number: 8080
