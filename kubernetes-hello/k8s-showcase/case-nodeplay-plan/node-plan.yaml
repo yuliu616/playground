@@ -23,13 +23,15 @@ spec:
       containers:
         - name: node
           image: node:14-slim
-          workingDir: /usr/src/app/express-hello
-          command: [ "/usr/local/bin/node", "." ]
+          # workingDir: /usr/src/app/express-hello
+          # command: [ "/usr/local/bin/node", "." ]
+          command: [ "/bin/sh", "-c" ]
+          args: ["cp -R /nodeplay /usr/src/app/ ; cd /usr/src/app/express-hello ; /usr/local/bin/node ."]
           ports:
             - containerPort: 8080
           volumeMounts:
             - name: nodeplay-vol
-              mountPath: /usr/src/app
+              mountPath: /nodeplay
             - name: tool-vol
               mountPath: /tool
           resources:
