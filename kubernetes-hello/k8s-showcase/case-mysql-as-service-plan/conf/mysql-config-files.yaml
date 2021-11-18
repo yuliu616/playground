@@ -18,3 +18,4 @@ data:
 
     pid-file=/var/run/mysqld/mysqld.pid
     bind-address = 0.0.0.0
+    max_connections=1500
