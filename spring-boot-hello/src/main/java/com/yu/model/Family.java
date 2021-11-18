@@ -21,7 +21,7 @@ import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "family")
+@Table(name = "ppl_family")
 public class Family implements IHasId {
 
     @Id
@@ -50,7 +50,7 @@ public class Family implements IHasId {
     private People mother;
 
     @ManyToMany()
-    @JoinTable(name="family_child",
+    @JoinTable(name="ppl_family_child",
             joinColumns = @JoinColumn(name="family_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="child_id", referencedColumnName = "id")
     )

@@ -1,4 +1,4 @@
-insert into family_child (id,
+insert into ppl_family_child (id,
     family_id, child_id)
 values
   ('92001', 87001, 33026),

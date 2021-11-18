@@ -1,4 +1,4 @@
-insert into people (id,
+insert into ppl_people (id,
     is_active, gender, nickname, date_of_birth,
     first_name, last_name, height_in_cm, weight_in_kg)
 values

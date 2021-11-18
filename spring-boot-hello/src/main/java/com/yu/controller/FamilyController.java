@@ -1,4 +1,4 @@
-package com.yu.hello;
+package com.yu.controller;
 
 import com.yu.exception.InconsistencyDataException;
 import com.yu.exception.RecordNotFoundException;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("${hello.api-base-url}/family")
+@RequestMapping("${hello-service.api-base-url}/family")
 public class FamilyController {
 
     @Autowired
@@ -41,32 +41,6 @@ public class FamilyController {
     private static final int PAGE_SIZE_SAFE_LIMIT = 100;
 
     private static Logger logger = LoggerFactory.getLogger(FamilyController.class);
-
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> throwable(Throwable throwable) {
-        logger.error("Uncaught throwable", throwable);
-        return Collections.singletonMap("message", throwable.getMessage());
-    }
-
-    @ExceptionHandler(RecordNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> failByRecordNotFound(RecordNotFoundException exception){
-        return Collections.singletonMap("errorCode", "RECORD_NOT_FOUND");
-    }
-
-    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> mvcValidationFailure(Throwable throwable) {
-        logger.error("mvcValidationFailure", throwable);
-        return Collections.singletonMap("errorCode", "VALIDATION_ERROR");
-    }
-
-    @ExceptionHandler(InconsistencyDataException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> failByDataInconsistency(InconsistencyDataException exception){
-        return Collections.singletonMap("errorCode", "DATA_INCONSISTENCY");
-    }
 
     @GetMapping("/{id}")
     public Family findFamilyById(

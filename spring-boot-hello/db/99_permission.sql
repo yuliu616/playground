@@ -1,8 +1,8 @@
 GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER
-  ON hellodb.people TO 'hellouser'@'%';
+  ON hellodb.ppl_people TO 'hellouser'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER
-  ON hellodb.family TO 'hellouser'@'%';
+  ON hellodb.ppl_family TO 'hellouser'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER
-  ON hellodb.family_child TO 'hellouser'@'%';
+  ON hellodb.ppl_family_child TO 'hellouser'@'%';
 
 FLUSH PRIVILEGES;

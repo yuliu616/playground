@@ -1,8 +1,8 @@
-package com.yu.hello;
+package com.yu.controller;
 
 import com.yu.exception.InconsistencyDataException;
 import com.yu.exception.RecordNotFoundException;
-import com.yu.model.CountDto;
+import com.yu.model.dto.CountDto;
 import com.yu.model.Family;
 import com.yu.model.Gender;
 import com.yu.model.People;
@@ -10,11 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,20 +21,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @RestController
-@RequestMapping("${hello.api-base-url}/people")
+@RequestMapping("${hello-service.api-base-url}/people")
 public class PeopleController {
 
     @Autowired
@@ -50,30 +49,25 @@ public class PeopleController {
 
     private static Logger logger = LoggerFactory.getLogger(PeopleController.class);
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> throwable(Throwable throwable) {
-        logger.error("Uncaught throwable", throwable);
-        return Collections.singletonMap("message", throwable.getMessage());
-    }
-
-    @ExceptionHandler(RecordNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> failByRecordNotFound(RecordNotFoundException exception){
-        return Collections.singletonMap("errorCode", "RECORD_NOT_FOUND");
-    }
-
-    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> mvcValidationFailure(Throwable throwable) {
-        logger.error("mvcValidationFailure", throwable);
-        return Collections.singletonMap("errorCode", "VALIDATION_ERROR");
-    }
-
-    @ExceptionHandler(InconsistencyDataException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> failByDataInconsistency(InconsistencyDataException exception){
-        return Collections.singletonMap("errorCode", "DATA_INCONSISTENCY");
+    @RequestMapping(method = RequestMethod.GET,
+            path = "/dummyPerson",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public People dummyPerson(){
+        try {
+            People p = new People();
+            p.setId(10123);
+            p.setFirstName("Peter");
+            p.setLastName("Chan");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dob = LocalDate.parse("2000-10-23", formatter);
+            dob = dob.minus(new Random().nextInt(50), ChronoUnit.YEARS);
+            logger.info("dob = {}", formatter.format(dob));
+            p.setDateOfBirth(dob);
+            return p;
+        } catch (DateTimeParseException ex) {
+            logger.error("error parsing", ex);
+            return null;
+        }
     }
 
     @GetMapping("/{id}")
@@ -244,7 +238,7 @@ public class PeopleController {
     }
 
     @Transactional
-    @PostMapping("/{id}/disable")
+    @PostMapping("/{id}/do/disable")
     public People disablePeopleAsProvided(
             @PathVariable("id") long id,
             @RequestBody Map<String, String> data
@@ -285,7 +279,7 @@ public class PeopleController {
     }
 
     @Transactional
-    @PutMapping("/{id}/addAge")
+    @PutMapping("/{id}/do/addAge")
     public People addAgeToPeopleById(@PathVariable(name = "id") long id,
                                      @RequestBody People people){
         if (id != people.getId()) {

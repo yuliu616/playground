@@ -14,21 +14,27 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${hello.api-base-url}")
-    protected String urlPrefixForEndpoints;
+    @Value("${hello-service.api-base-url}")
+    protected String apiBaseUrl;
 
     private static final Logger logger = LoggerFactory.getLogger(AppSecurityConfig.class);
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        logger.info("API endpoint prefix=[{}].", this.urlPrefixForEndpoints);
+        logger.info("API endpoint prefix=[{}].", this.apiBaseUrl);
 
         // ensure the service is completely stateless (and never set cookie)
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
+        http.sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.csrf().disable();
 
-        // just open for all access
+        // actuator endpoints
+        http.authorizeRequests()
+                .antMatchers("/actuator/**").permitAll();
+
+        // access control for endpoints
+        // (just open for all access)
         http.authorizeRequests()
             .anyRequest()
             .permitAll();

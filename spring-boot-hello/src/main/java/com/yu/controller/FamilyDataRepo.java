@@ -1,4 +1,4 @@
-package com.yu.hello;
+package com.yu.controller;
 
 import com.yu.model.Family;
 import org.springframework.data.jpa.repository.Query;

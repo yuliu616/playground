@@ -1,4 +1,4 @@
-insert into family (id,
+insert into ppl_family (id,
     father_id, mother_id)
 values
   ('87001', 33001, 33003),

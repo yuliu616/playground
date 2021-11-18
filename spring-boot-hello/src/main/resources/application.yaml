@@ -1,11 +1,5 @@
 server.port: 8080
-hello:
-  service-name: hello-service
-  api-base-url: /api
-  api-version: 1.2
-  age: 10
 spring:
-  profiles: default
   jpa:
     properties:
       hibernate:
@@ -22,5 +16,17 @@ spring:
     password: pass1234
     hikari:
       maximum-pool-size: 100
-logging.level.org.hibernate.SQL: DEBUG
-logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+      connection-timeout: 6000
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+hello-service:
+  service-name: hello-service
+  api-version: 1.3
+  # NEVER OVERRIDE THIS VALUE IN RUNTIME
+  api-base-url: /api/1.3
+  version-description: demo project for spring-boot.
+  options:
+    enable-debug-endpoint: true

@@ -1,4 +1,4 @@
-package com.yu.model;
+package com.yu.model.dto;
 
 public class CountDto {
 

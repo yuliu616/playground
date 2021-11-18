@@ -23,7 +23,7 @@ import java.time.LocalDate;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "people")
+@Table(name = "ppl_people")
 public class People implements IHasId {
 
     @Id
