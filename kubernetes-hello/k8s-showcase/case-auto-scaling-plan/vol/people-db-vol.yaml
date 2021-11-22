@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: hellodb-vol
+  name: people-db-vol
   labels:
     type: pv
-    app: "hellodb"
+    app: people-db
     format: "mysql"
     tier: db
     env: debug
 spec:
   capacity:
-    storage: 10Gi
+    storage: 4Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /Users/Shared/k8s-volumes/hellodb-vol
+    path: /Users/Shared/k8s-volumes/mysql-vol/people-db-vol
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -32,9 +32,9 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: hello-world
-  name: hellodb-vol-claim
+  name: people-db-vol-claim
   labels:
-    app: hellodb
+    app: people-db
     format: mysql
     tier: db
     env: debug
@@ -44,11 +44,11 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 10Gi
+      storage: 4Gi
   storageClassName: local-storage
   selector:
     matchLabels:
-      app: "hellodb"
+      app: people-db
       format: "mysql"
       tier: db
       env: debug

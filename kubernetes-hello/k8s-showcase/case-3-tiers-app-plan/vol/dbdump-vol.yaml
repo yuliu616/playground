@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: html-vol
+  name: dbdump-vol
   labels:
     type: pv
-    app: "nginx"
-    format: "html"
-    tier: web
+    app: "dbdump"
+    format: "mysql"
+    tier: db
     env: debug
 spec:
   capacity:
-    storage: 4Gi
+    storage: 10Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /Users/Shared/k8s-volumes/html-vol
+    path: /Users/Shared/k8s-volumes/mysql-vol/dbdump-vol
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -32,11 +32,11 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: hello-world
-  name: html-vol-claim
+  name: dbdump-vol-claim
   labels:
-    app: nginx
-    format: html
-    tier: web
+    app: dbdump
+    format: mysql
+    tier: db
     env: debug
 spec:
   accessModes:
@@ -44,11 +44,11 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 4Gi
+      storage: 10Gi
   storageClassName: local-storage
   selector:
     matchLabels:
-      app: "nginx"
-      format: "html"
-      tier: web
+      app: "dbdump"
+      format: "mysql"
+      tier: db
       env: debug

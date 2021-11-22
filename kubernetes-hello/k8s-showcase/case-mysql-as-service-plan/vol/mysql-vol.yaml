@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /Users/Shared/k8s-volumes/mysql-vol
+    path: /Users/Shared/k8s-volumes/mysql-vol/hellodb-vol
   nodeAffinity:
     required:
       nodeSelectorTerms:

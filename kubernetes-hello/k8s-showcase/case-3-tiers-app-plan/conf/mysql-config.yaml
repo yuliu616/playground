@@ -3,7 +3,7 @@ kind: ConfigMap
 immutable: false
 metadata:
   namespace: hello-world
-  name: hellodb-misc-options
+  name: mysql-misc-options
   labels:
     type: conf
 data:

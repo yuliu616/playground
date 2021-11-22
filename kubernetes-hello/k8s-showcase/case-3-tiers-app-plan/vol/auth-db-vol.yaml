@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: html-vol
+  name: auth-db-vol
   labels:
     type: pv
-    app: "nginx"
-    format: "html"
-    tier: web
+    app: auth-db
+    format: "mysql"
+    tier: db
     env: debug
 spec:
   capacity:
@@ -18,7 +18,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /Users/Shared/k8s-volumes/html-vol
+    path: /Users/Shared/k8s-volumes/mysql-vol/auth-db-vol
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -32,11 +32,11 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: hello-world
-  name: html-vol-claim
+  name: auth-db-vol-claim
   labels:
-    app: nginx
-    format: html
-    tier: web
+    app: auth-db
+    format: mysql
+    tier: db
     env: debug
 spec:
   accessModes:
@@ -48,7 +48,7 @@ spec:
   storageClassName: local-storage
   selector:
     matchLabels:
-      app: "nginx"
-      format: "html"
-      tier: web
+      app: auth-db
+      format: "mysql"
+      tier: db
       env: debug

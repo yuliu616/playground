@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: hello-world
-  name: mysql-plan
+  name: people-db-plan
   labels:
-    app: mysql
+    app: people-db
     tier: db
     env: debug
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql-app
+      app: people-db
       tier: db
       env: debug
   template:
     metadata:
       labels:
-        app: mysql-app
+        app: people-db
         tier: db
         env: debug
     spec:
       containers:
-        - name: mysql
+        - name: people-db
           image: mysql/mysql-server:8.0
           ports:
             - containerPort: 3306
@@ -51,7 +51,7 @@ spec:
             name: mysql-config-file
         - name: data-vol
           persistentVolumeClaim:
-            claimName: mysql-vol-claim
+            claimName: people-db-vol-claim
         - name: dbdump-vol
           persistentVolumeClaim:
             claimName: dbdump-vol-claim
@@ -61,14 +61,14 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: hello-world
-  name: mysql
+  name: people-db
   labels:
-    app: mysql
+    app: people-db
     tier: db
     env: debug
 spec:
   selector:
-    app: mysql-app
+    app: people-db
     tier: db
     env: debug
   ports:

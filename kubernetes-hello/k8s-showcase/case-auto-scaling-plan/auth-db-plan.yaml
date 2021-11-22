@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: hello-world
-  name: hellodb-plan
+  name: auth-db-plan
   labels:
-    app: hellodb
+    app: auth-db
     tier: db
     env: debug
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hellodb-app
+      app: auth-db
       tier: db
       env: debug
   template:
     metadata:
       labels:
-        app: hellodb-app
+        app: auth-db
         tier: db
         env: debug
     spec:
       containers:
-        - name: hellodb-db
+        - name: auth-db
           image: mysql/mysql-server:8.0
           ports:
             - containerPort: 3306
@@ -30,7 +30,7 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: hellodb-misc-options
+                  name: mysql-misc-options
                   key: rootPass
           volumeMounts:
             - name: mysql-conf
@@ -38,27 +38,37 @@ spec:
               subPath: my.cnf
             - name: data-vol
               mountPath: /var/lib/mysql
+            - name: dbdump-vol
+              mountPath: /dbdump
+          resources:
+            requests:
+              cpu: "1000m"
+            limits:
+              cpu: "1000m"
       volumes:
         - name: mysql-conf
           configMap:
-            name: hellodb-config-file
+            name: mysql-config-file
         - name: data-vol
           persistentVolumeClaim:
-            claimName: hellodb-vol-claim
+            claimName: auth-db-vol-claim
+        - name: dbdump-vol
+          persistentVolumeClaim:
+            claimName: dbdump-vol-claim
       restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
   namespace: hello-world
-  name: hellodb
+  name: auth-db
   labels:
-    app: hellodb
+    app: auth-db
     tier: db
     env: debug
 spec:
   selector:
-    app: hellodb-app
+    app: auth-db
     tier: db
     env: debug
   ports:

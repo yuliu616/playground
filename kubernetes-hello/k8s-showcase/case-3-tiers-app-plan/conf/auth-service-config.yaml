@@ -11,7 +11,7 @@ data:
     server.port: 8080
     spring:
       datasource:
-        url: jdbc:mysql://hellodb:3306/hellodb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&noAccessToProcedureBodies=true&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://auth-db:3306/hellodb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&noAccessToProcedureBodies=true&allowPublicKeyRetrieval=true
         username: auth_dbuser
         password: pass1234
         hikari:
