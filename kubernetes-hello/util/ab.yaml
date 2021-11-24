@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: ab
+  labels:
+    app: ab
+    env: debug
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: ab
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: ab
+        env: debug
+    spec:
+      containers:
+        - name: ab
+          image: jordi/ab:latest
+          env:
+            - name: INIT_WAIT_SEC
+              value: "2"
+            - name: WAIT_FOR_MINUTE_FIGURE
+              # value: ""
+              value: "43"
+            - name: WAIT_FOR_SEC_00
+              value: "Y"
+              # value: ""
+            - name: AB_V
+              value: "1"
+            - name: AB_CC
+              # value: "1"
+              # value: "100"
+              value: "100"
+            - name: AB_N
+              # value: "1"
+              # value: "48000"
+              value: "48000"
+            - name: AB_URL
+#              value: "http://nginx-service/index.html"
+#              value: "http://nginx-service/images/lake.gif"
+#              value: "http://nodeplay-service/api/1.0/about"
+#              value: "http://html-service/"
+              value: "http://people-service/api/1.0/about"
+#              value: "http://auth-service/api/1.0/login"
+#              value: "http://people-service/api/1.0/people/33001"
+#              value: "http://people-service/api/1.0/people?size=320"
+            - name: TOKEN
+              # value: ""
+              value: "eyJhbGciOiJFUzI1NksifQ.eyJpc3MiOiJjb20ueXUiLCJyb2xlIjpbIlJPT1RfQURNSU4iXSwiZXhwIjoxOTM1MDIyOTA5LCJ1c2VybmFtZSI6InVzZXIxMDAxIn0.KnSgz53i8L2qmQIeJ0bK3ZF_sXkUa1wMPuW84fwnSqgdKATyl9uOJVAOKqDilx_6qsqPH-7o5tIUYrUAYhYoMQ"
+            - name: POST_FILE
+              value: ""
+              # value: "/tool/dto/login.json"
+              # value: "/tool/dto/people.json"
+          command: 
+            - /bin/sh
+            - -c
+            - /tool/ab.sh
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "4Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: tool-vol
+              mountPath: /tool
+      volumes:
+        - name: tool-vol
+          persistentVolumeClaim:
+            claimName: tool-vol-claim

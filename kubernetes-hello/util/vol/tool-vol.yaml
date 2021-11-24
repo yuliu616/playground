@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tool-vol
+  labels:
+    type: pv
+    app: tool
+    env: debug
+spec:
+  capacity:
+    storage: 4Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  # for ease of local debugging, use "Retain"
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /Users/Shared/k8s-volumes/tool-vol
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: hello-world
+  name: tool-vol-claim
+  labels:
+    app: tool
+    env: debug
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 4Gi
+  storageClassName: local-storage
+  selector:
+    matchLabels:
+      app: tool
+      env: debug
