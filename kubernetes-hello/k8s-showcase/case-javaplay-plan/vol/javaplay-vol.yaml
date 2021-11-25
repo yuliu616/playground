@@ -32,6 +32,7 @@ metadata:
   namespace: hello-world
   name: javaplay-vol-claim
   labels:
+    type: pvc
     app: javaplay
     env: debug
 spec:

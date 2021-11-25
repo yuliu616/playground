@@ -34,6 +34,7 @@ metadata:
   namespace: hello-world
   name: html-vol-claim
   labels:
+    type: pvc
     app: nginx
     format: html
     tier: web

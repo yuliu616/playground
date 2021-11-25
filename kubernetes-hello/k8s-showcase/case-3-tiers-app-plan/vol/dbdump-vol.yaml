@@ -34,6 +34,7 @@ metadata:
   namespace: hello-world
   name: dbdump-vol-claim
   labels:
+    type: pvc
     app: dbdump
     format: mysql
     tier: db

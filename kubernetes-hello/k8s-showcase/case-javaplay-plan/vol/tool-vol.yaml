@@ -32,6 +32,7 @@ metadata:
   namespace: hello-world
   name: tool-vol-claim
   labels:
+    type: pvc
     app: tool
     env: debug
 spec:

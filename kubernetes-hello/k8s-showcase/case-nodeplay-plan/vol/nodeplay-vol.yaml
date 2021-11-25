@@ -32,6 +32,7 @@ metadata:
   namespace: hello-world
   name: nodeplay-vol-claim
   labels:
+    type: pvc
     app: nodeplay
     env: debug
 spec:

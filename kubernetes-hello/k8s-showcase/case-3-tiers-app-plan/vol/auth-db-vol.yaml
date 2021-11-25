@@ -34,6 +34,7 @@ metadata:
   namespace: hello-world
   name: auth-db-vol-claim
   labels:
+    type: pvc
     app: auth-db
     format: mysql
     tier: db
