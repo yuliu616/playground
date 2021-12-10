@@ -30,13 +30,13 @@ metadata:
     tier: gateway
     env: debug
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1
+    nginx.ingress.kubernetes.io/rewrite-target: /api/1.1/$1
 spec:
   ingressClassName: nginx
   rules:
     - http:
         paths:
-          - path: /api/auth-service/1.0/(.*)
+          - path: /api/auth-service/1.1/(.*)
             pathType: Prefix
             backend:
               service:
@@ -61,13 +61,13 @@ metadata:
     tier: gateway
     env: debug
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /api/1.0/$1
+    nginx.ingress.kubernetes.io/rewrite-target: /api/1.1/$1
 spec:
   ingressClassName: nginx
   rules:
     - http:
         paths:
-          - path: /api/people-service/1.0/(.*)
+          - path: /api/people-service/1.1/(.*)
             pathType: Prefix
             backend:
               service:

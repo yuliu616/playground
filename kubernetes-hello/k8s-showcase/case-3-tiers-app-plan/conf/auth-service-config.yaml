@@ -23,6 +23,12 @@ data:
         echo-login-info: false
         enable-debug-endpoint: true
         accept-expired-auth-token: false
+        model:
+          user:
+            id-generation-strategy: ID_TABLE
+      password:
+        charset: UTF-8
+        hash-algo: SHA-256
       jwt:
         jws-algorithm-name: ES256K
         private-key-PEM:
@@ -37,3 +43,4 @@ data:
           8MVZV/s28qH6mGcUfrqGnKMu7t+EVmTP0f3RGOd6sO1AnhsqkLzCrQ==
           -----END PUBLIC KEY-----
         token-valid-time-sec: 1500
+        token-issuer: com.yu

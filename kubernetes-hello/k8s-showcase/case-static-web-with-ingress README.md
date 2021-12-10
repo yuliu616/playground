@@ -2,7 +2,7 @@
 
 - static web exposed via ingress.
 - dependency:
-  - require docker image `gui-web-vue:1.0`.
+  - require docker image `gui-web-vue:1.0.1`.
   - require ingress controller `ingress-nginx` (v4.0.6).
   - require Kubernetes metrics server (v0.5.1).
 - serving:

@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: auth-service:1.0
+          image: auth-service:1.1
           ports:
             - containerPort: 8080
           volumeMounts:

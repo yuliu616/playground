@@ -2,7 +2,7 @@
 
 - API app (http) exposed via ingress.
 - dependency:
-  - require docker image `people-service:1.0`.
+  - require docker image `people-service`.
   - require ingress controller `ingress-nginx` (v4.0.6).
   - require Kubernetes metrics server (v0.5.1).
 - serving:

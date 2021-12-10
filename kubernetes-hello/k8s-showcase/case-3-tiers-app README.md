@@ -3,7 +3,7 @@
 - small 3 tiers architecture app (web/app/db).
 - dependency:
   - database(mysql) container need to be populated (or restored), refer to section "Database Restoration".
-  - require docker image `people-service:1.0`.
+  - require docker image `people-service`.
   - require ingress controller `ingress-nginx` (v4.0.6).
   - require Kubernetes metrics server (v0.5.1).
 - serving:

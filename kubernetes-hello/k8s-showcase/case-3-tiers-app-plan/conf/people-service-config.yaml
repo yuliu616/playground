@@ -27,6 +27,9 @@ data:
           -----END PUBLIC KEY-----
     people-service:
       options:
-        enable-debug-endpoint: false
+        enable-debug-endpoint: true
         accept-expired-auth-token: false
         disable-permission-check: false
+        model:
+          people:
+            id-generation-strategy: ID_TABLE
