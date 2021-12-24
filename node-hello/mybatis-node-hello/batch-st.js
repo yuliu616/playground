@@ -31,7 +31,7 @@ let overallSummary  = {
 };
 
 mybatisMapper.createMapper([
-  'mapper/People-Mapper.xml',
+  './src/mapper/People-Mapper.xml',
 ]);
 
 const format = {
