@@ -1,7 +1,11 @@
-const mysql = require('mysql2');
-const moment = require('moment');
-const Promise = require('bluebird');
-const mybatisMapper = require('mybatis-mapper');
+import * as mysql from 'mysql2';
+import * as moment from 'moment';
+import * as Promise from 'bluebird';
+import * as mybatisMapper from 'mybatis-mapper';
+import { Format } from 'mybatis-mapper';
+import { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { PromiseUtil } from './PromiseUtil';
+import { ArrayUtil } from './ArrayUtil';
 
 const CONN_POOL = (+process.env.CONN_POOL || 2);
 const BATCH_CONCURRENT_COUNT = (+process.env.CC || 50);
@@ -34,18 +38,10 @@ mybatisMapper.createMapper([
   './src/mapper/People-Mapper.xml',
 ]);
 
-const format = {
+const format: Format = {
   language: 'sql',
   indent: '',
 };
-
-function wait(timeoutMs, result) {
-  return new Promise((resolve, reject)=>{
-    setTimeout(()=>{
-      resolve(result);
-    }, timeoutMs);  
-  });
-}
 
 function processSt(){
   let startTime = new Date().getTime();
@@ -89,25 +85,25 @@ function processSt(){
   return connectionPool.promise().getConnection().then(conn=>{
     return conn.query(st).then(([results])=>{
       let lapsedTime = new Date().getTime() - startTime;
-      if (results.length) {
+      if ("length" in results && results.length) {
         overallSummary.rowsReturned += results.length;
       }
-      if (results.affectedRows) {
+      if ("affectedRows" in results && results.affectedRows) {
         overallSummary.rowsAffected += results.affectedRows;
       }
       let result = {
         lapsed: lapsedTime,
         "0.id": (results[0] ? results[0].id : null),
-        rows: results.length,
-        affectedRows: results.affectedRows,
-        insertId: results.insertId,
+        rows: (results as RowDataPacket).length,
+        affectedRows: (results as ResultSetHeader).affectedRows,
+        insertId: (results as ResultSetHeader).insertId,
       };
-      return [conn, result];
-    }).then(([conn, result])=>{
+      return {conn, result};
+    }).then(({conn, result})=>{
       overallSummary.totalLapsedTime += result.lapsed;
       conn.release();
       if (ADD_WAIT) {
-        return wait(ADD_WAIT, result);
+        return PromiseUtil.wait(ADD_WAIT, result);
       } else {
         return result;
       }
@@ -137,14 +133,11 @@ let batchFactory = ()=>{
   return batch;
 };
 
-let repeating = [];
-for (let i=0;i < BATCH_REPEAT_COUNT; i++) {
-  repeating.push(0);
-}
+let repeating = ArrayUtil.createArray(0, BATCH_REPEAT_COUNT);
 let job = Promise.mapSeries(repeating, batchFactory);
 // let job = batchFactory();
 
-return job.then(()=>{
+job.then(()=>{
   let overallEndTime = new Date();
   overallSummary.endTime = overallEndTime.toISOString();
   overallSummary.duration = overallEndTime.getTime() - overallStartTime.getTime();
