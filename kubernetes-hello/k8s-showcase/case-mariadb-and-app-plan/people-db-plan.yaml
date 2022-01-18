@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hello-world
+  name: people-db-plan
+  labels:
+    app: people-db
+    tier: db
+    env: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: people-db
+      tier: db
+      env: debug
+  template:
+    metadata:
+      labels:
+        app: people-db
+        tier: db
+        env: debug
+    spec:
+      containers:
+        - name: people-db
+          image: mariadb:10.3.32
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mariadb-misc-options
+                  key: rootPass
+          volumeMounts:
+            - name: mariadb-conf
+              mountPath: /etc/mysql/conf.d/my.cnf
+              subPath: my.cnf
+            - name: data-vol
+              mountPath: /var/lib/mysql
+            - name: dbdump-vol
+              mountPath: /dbdump
+          resources:
+            requests:
+              cpu: "2000m"
+            limits:
+              cpu: "2000m"
+      volumes:
+        - name: mariadb-conf
+          configMap:
+            name: mariadb-config-file
+        - name: data-vol
+          persistentVolumeClaim:
+            claimName: people-db-vol-claim
+        - name: dbdump-vol
+          persistentVolumeClaim:
+            claimName: dbdump-vol-claim
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hello-world
+  name: people-db
+  labels:
+    app: people-db
+    tier: db
+    env: debug
+spec:
+  selector:
+    app: people-db
+    tier: db
+    env: debug
+  ports:
+    - protocol: TCP
+      port: 3306

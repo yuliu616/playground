@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-people-service
+  labels:
+    app: people-service
+    tier: gateway
+    env: debug
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/1.1/$1
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/people-service/1.1/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: people-service
+                port:
+                  number: 8082
+          - path: /api/people-service/(about)
+            pathType: Exact
+            backend:
+              service:
+                name: people-service
+                port:
+                  number: 8082

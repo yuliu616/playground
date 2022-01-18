@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+immutable: false
+metadata:
+  namespace: hello-world
+  name: mariadb-misc-options
+  labels:
+    type: conf
+data:
+  rootPass: "pass1234"
