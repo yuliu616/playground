@@ -19,3 +19,7 @@ data:
     pid-file=/var/run/mysqld/mysqld.pid
     bind-address = 0.0.0.0
     max_connections=1500
+    max_allowed_packet=67108864
+    innodb_buffer_pool_size=134217728
+    innodb_io_capacity=200
+    innodb_io_capacity_max=400
