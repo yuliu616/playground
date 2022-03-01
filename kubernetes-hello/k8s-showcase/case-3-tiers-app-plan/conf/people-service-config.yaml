@@ -9,6 +9,7 @@ metadata:
 data:
   "application.yaml": |
     server.port: 8082
+    server.tomcat.threads.max: 200
     spring:
       datasource:
         url: jdbc:mysql://people-db:3306/hellodb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&noAccessToProcedureBodies=true&allowPublicKeyRetrieval=true
@@ -32,4 +33,5 @@ data:
         disable-permission-check: false
         model:
           people:
-            id-generation-strategy: ID_TABLE
+            id-generation-strategy: ID_TABLE_CROSSING_COUNTER
+            factor-for-crossing: 1000000
