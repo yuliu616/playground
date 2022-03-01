@@ -81,3 +81,51 @@ spec:
                 name: people-service
                 port:
                   number: 8082
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-people-service-actuator-lv1
+  labels:
+    app: people-service
+    tier: gateway
+    env: debug
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /actuator
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/people-service/actuator
+            pathType: Exact
+            backend:
+              service:
+                name: people-service
+                port:
+                  number: 8082
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: hello-world
+  name: ingress-people-service-actuator-lv2
+  labels:
+    app: people-service
+    tier: gateway
+    env: debug
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /actuator/$1
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/people-service/actuator/(.*)
+            pathType: Exact
+            backend:
+              service:
+                name: people-service
+                port:
+                  number: 8082
