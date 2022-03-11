@@ -1,0 +1,16 @@
+hello:
+  jwt:
+    jws-algorithm-name: ES256K
+    private-key-PEM:
+      -----BEGIN PRIVATE KEY-----
+      MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgjZ+mQMBI3V/BRfTM4Rx2
+      0oiqtdUw7j6mPi5wg+AgROihRANCAAT4W3cDMH7EE1qgE5hTR+Pf6YCesz5pggDw
+      xVlX+zbyofqYZxR+uoacoy7u34RWZM/R/dEY53qw7UCeGyqQvMKt
+      -----END PRIVATE KEY-----
+    public-key-PEM:
+      -----BEGIN PUBLIC KEY-----
+      MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE+Ft3AzB+xBNaoBOYU0fj3+mAnrM+aYIA
+      8MVZV/s28qH6mGcUfrqGnKMu7t+EVmTP0f3RGOd6sO1AnhsqkLzCrQ==
+      -----END PUBLIC KEY-----
+    token-valid-time-sec: 300
+    token-issuer: com.yu
