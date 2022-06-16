@@ -1,0 +1,9 @@
+{
+  "name": "kafka-hello",
+  "version": "1.0.0",
+  "main": "kafka-consumer-hello.js",
+  "dependencies": {
+    "kafka-node": "^5.0.0"
+  },
+  "devDependencies": {}
+}
