@@ -3,7 +3,7 @@ Thumbs.db
 .DS_Store
 
 # IDEs and editors
-/.vs
+.vs
 /.vscode
 /.idea
 *.iml
