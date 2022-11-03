@@ -23,6 +23,30 @@ namespace pub
 
         static void Main(string[] args)
         {
+            Console.WriteLine($"{LogTime} work-around for loading libkafka.");
+            ///////////////////////////////////////////////////////////////////////////
+            // work-around to load libkafka manually (instead of auto look up current folder)
+            ///////////////////////////////////////////////////////////////////////////
+            var librdkafka_dll_file_path =
+                "d:/temp/librdkafka/x64/librdkafka.dll"
+                .Replace("/", "\\");
+            try
+            {
+                // only need to load one file: 'librdkafka.dll'
+                // only proved working in windows(x64),
+                // macos wont work.
+                Confluent.Kafka.Library.Load(librdkafka_dll_file_path);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"{LogTime} ERROR error loading kafka library file at: {librdkafka_dll_file_path}");
+                Console.WriteLine(
+                    $"{ex.GetType().Name} {ex.Message}\n" + ex.StackTrace);
+                throw ex;
+            }
+            ///////////////////////////////////////////////////////////////////////////
+
             Console.WriteLine($"{LogTime} KafkaPub(Confluent.Kafka).Main v1.");
             var program = new Program();
             program.RunHello();
