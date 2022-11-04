@@ -66,7 +66,8 @@ namespace cons
         void RunHello()
         {
             bool keepConsumerAlive = true;
-            cancellationToken = new CancellationTokenSource();
+            cancellationToken = new CancellationTokenSource();            
+            var readyToQuit = new Semaphore(0, maximumCount: 1);
             Task.Run(() =>
             {
                 Console.WriteLine($"{LogTime} consumer thread - started.");
@@ -114,21 +115,38 @@ namespace cons
 
                         while (keepConsumerAlive)
                         {
-                            var data = kafkaConsumer.Consume(cancellationToken.Token);
-                            onMessage(data.Offset.Value, data.Message);
-                            if (doCommitEveryMessage)
+                            try
                             {
-                                kafkaConsumer.Commit(); // commit immediately
+                                var data = kafkaConsumer.Consume(cancellationToken.Token);
+                                onMessage(data.Offset.Value, data.Message);
+                                if (doCommitEveryMessage)
+                                {
+                                    kafkaConsumer.Commit(); // commit immediately
+                                }
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                Console.WriteLine($"{LogTime} consumer canceled.");
+                                kafkaConsumer.Close();
+                                kafkaConsumer.Dispose();
+                                kafkaConsumer = null;
+                                break;
                             }
                         }
-                        kafkaConsumer.Dispose();
+                        if (kafkaConsumer != null)
+                        {
+                            kafkaConsumer.Close();
+                            kafkaConsumer.Dispose();
+                        }
+                        Console.WriteLine($"{LogTime} sleep after kafkaConsumer.Close ...");
+                        // add delay to ensure consumer closed(committed)
+                        // (not necessary, but added for safe)
+                        Thread.Sleep(5000);
+                        Console.WriteLine($"{LogTime} sleep after kafkaConsumer.Close ... done");
+                        readyToQuit.Release(1);
+                        Console.WriteLine($"{LogTime} readyToQuit.Released.");
                     }
-                }
-                catch (OperationCanceledException)
-                {
-                    Console.WriteLine($"{LogTime} consumer canceled.");
-                    kafkaConsumer.Close();
-                }
+                }                
                 catch (Exception ex)
                 {
                     Console.WriteLine($"{LogTime} ERROR in consumer thread.");
@@ -141,11 +159,13 @@ namespace cons
             Console.WriteLine("PRESS ENTER TO END THE PROGRAM");
             Console.WriteLine("--------------------------------------------");
             Console.Read();
+            
+            Console.WriteLine($"{LogTime} shutting down ...");
             keepConsumerAlive = false;
             cancellationToken.Cancel();
-
-            Console.WriteLine($"{LogTime} shutting down ...");
-            Console.WriteLine("program exit");
+            Console.WriteLine($"{LogTime} wait for readyToQuit(Semaphore) flag ...");
+            readyToQuit.WaitOne();
+            Console.WriteLine($"{LogTime} program exit");
         }
 
         private void onMessage(long offset, Message<Ignore, byte[]> message)
