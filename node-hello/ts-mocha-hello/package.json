@@ -1,0 +1,16 @@
+{
+  "name": "ts-mocha-hello",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "ts-mocha test/*.spec.ts"
+  },
+  "dependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.0",
+    "chai": "^4.3.7",
+    "mocha": "^10.1.0",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}
