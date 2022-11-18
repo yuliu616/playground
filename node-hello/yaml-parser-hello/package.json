@@ -1,0 +1,8 @@
+{
+  "name": "yaml-parser-hello",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "yaml": "^2.1.3"
+  }
+}
