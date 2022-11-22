@@ -1,5 +1,6 @@
-import { readFileSync } from 'node:fs';
-import * as YAML from 'yaml';
+// 'yamljs' wont support node.js 'module' mode
+let YAML = require('yamljs');
+let fs = require('fs');
 
 {
   let data = {
@@ -9,7 +10,7 @@ import * as YAML from 'yaml';
     "gender": "MALE",
     "dateOfBirth": "1990-10-25"
   };
-  let str = YAML.stringify(data);
+  let str = YAML.stringify(data, 2);
   console.log('YAML for json:');
   console.log(str);
 }
@@ -25,7 +26,7 @@ import * as YAML from 'yaml';
     "牛肉",
     "烧肉"
   ];
-  let str = YAML.stringify(data);
+  let str = YAML.stringify(data, 2);
   console.log('YAML for json:');
   console.log(str);
 }
@@ -57,7 +58,7 @@ import * as YAML from 'yaml';
       }
     ]
   };
-  let str = YAML.stringify(data);
+  let str = YAML.stringify(data, 2);
   console.log('YAML for json:');
   console.log(str);
 }
