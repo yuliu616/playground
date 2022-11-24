@@ -179,6 +179,21 @@ app.get('/api/1.0/calc', (req, res, next)=>{
 
 });
 
+app.get('/api/1.0/big', (req, res, next)=>{
+  let scale;
+  if (+req.query.scale) {
+    scale = (+req.query.scale) * 1024;
+  } else {
+    scale = 64 * 1024; // default 64 x 1024
+  }
+  if (debug) console.log(`big with scale= ${scale}`);
+
+  for (let i=0;i<scale;i++) {
+    res.write('.');
+  }
+  res.end();
+});
+
 app.listen(port, ()=>{
   console.log(`server[${serverRandId}] started at port=[%d].`, port);
 });
