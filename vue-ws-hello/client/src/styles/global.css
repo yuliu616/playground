@@ -1,0 +1,21 @@
+/* for animations */
+.faded-slide-enter-active,
+.faded-slide-leave-enter {
+  transform: translateX(0);
+  transition: all .15s ease-in;
+}
+.faded-slide-enter,
+.faded-slide-leave-to {
+  transform: translateX(30%);
+  opacity: 0;
+}
+
+/* page base */
+body {
+  background-color: whitesmoke;
+}
+
+/* app defined width */
+.w-viewport {
+  width: 1200px;
+}
