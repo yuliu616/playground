@@ -39,6 +39,10 @@ app.use('/api/version', createProxyMiddleware({
     '^/api/version': serviceProvider.rest_service.aboutUrl,
   }
 }));
+app.use('/ws', createProxyMiddleware({
+  target: 'ws://127.0.0.1:8080/',
+  ws: true,
+}));
 
 ///////////////////////////////
 // proxy to gui-web [debug mode server]

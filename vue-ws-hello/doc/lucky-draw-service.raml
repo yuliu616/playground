@@ -1,0 +1,108 @@
+#%RAML 1.0
+title: lucky-draw-service REST API
+version: 1.0
+securitySchemes:
+  # Bearer Token in this pattern: `Bearer ${access_token}`.
+
+baseUri: http://localhost:8080/api/1.0
+
+/version:
+  get:
+    queryParameters:
+      printLog:
+        type: boolean
+        default: true
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            example:
+              {
+                "serviceName": "vue-ws-hello-server",
+                "apiVersion": "1.0",
+                "apiBaseUrl": "/api/1.0",
+                "currentTime": "2020-11-30T02:43:11.856543Z",
+                "currentDate": "2020-11-30",
+                "description": "first version.",
+                "instanceRandId": 15507,
+              }
+/time:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            example:
+              {
+                "currentTime": "2020-11-30T02:43:11.856543Z",
+                "currentDate": "2020-11-30"
+              }
+/luckyDraw:
+  /debugging:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: object
+              example:
+                {
+                  "clientIdList": [
+                    1001,
+                    1002
+                  ],
+                  "userInfoMap": {},
+                  "luckyDraw": {
+                    "startTime": null,
+                    "ticketList": [],
+                    "totalContribution": 0
+                  },
+                  "clientIdOfClient": {
+                    "1001": {},
+                    "1002": {}
+                  }
+                }
+  /join:
+    post:
+      body:
+        application/json:
+          example:
+            {
+              clientId: 1001,
+              name: 'Peter',
+              guess: 9,
+              contribution: 1200.0
+            }
+      responses:
+        200:
+          body:
+            application/json:
+              type: object
+              example:
+                {
+                  "ok": true
+                }
+  /start:
+    put:
+      responses:
+        200:
+          body:
+            application/json:
+              type: object
+              example:
+                {
+                  "ok": true
+                }
+  /stop:
+    put:
+      responses:
+        200:
+          body:
+            application/json:
+              type: object
+              example:
+                {
+                  "ok": true
+                }
