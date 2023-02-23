@@ -6,6 +6,7 @@ import App from './App.vue';
 import router from './router/router-index';
 
 import './styles';
+import { rootStore } from './stores/index';
 
 Vue.config.productionTip = false;
 
@@ -14,6 +15,7 @@ Vue.use(Antd);
 new Vue({
   router,
   render: h => h(App),
+  store: rootStore,
 }).$mount('#app');
 
 // set up axios
