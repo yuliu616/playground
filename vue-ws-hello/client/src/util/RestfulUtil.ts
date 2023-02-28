@@ -26,7 +26,8 @@ export class RestfulUtil {
     let axiosErr: AxiosError = err;
     let axiosErrRes: AxiosResponse = err.response;
     
-    if (err && err.message) {
+    if (!axiosErr.isAxiosError &&
+    err && err.message) {
       errorMessage = err.message;
     }
     if (options?.includeTrace && axiosErr.config) {
@@ -101,6 +102,8 @@ export class RestfulUtil {
             // for response payload is coded
             result.code = (axiosErrRes.data.errorCode || axiosErrRes.data.code);
             result.messageArguments = axiosErrRes.data?.arg;
+          } else if (axiosErrRes.data.message){
+            result.message = axiosErrRes.data.message;
           }
         } else if (errorMessage){
           result.message = errorMessage;

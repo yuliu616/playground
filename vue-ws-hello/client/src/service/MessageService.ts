@@ -56,6 +56,8 @@ export class MessageServiceImpl {
         // if error code exists, display error message by it instead.
         errorObject = converted;
         message = converted.code;
+      } else if (converted?.message){
+        message = converted?.message;
       }
     }
 
@@ -81,29 +83,35 @@ export class MessageServiceImpl {
     options: MessageOptions|null = null,
   ): Promise<void> {
     if (this.debug) console.log(`msg[${message.type}] :`, message.text);
+    let duration = options?.doNoAutoClose ? 0 :
+      (options?.durationSec || MESSAGE_DEFAULT_DURATION_SEC);
     switch (message.type) {
       case MessageType.INFO:
         notification.info({
           message: 'hi',
           description: message.text,
+          duration: duration,
         });    
         break;
       case MessageType.WARN:
         notification.warn({
           message: 'hey',
           description: message.text,
+          duration: duration,
         });    
         break;
       case MessageType.ERROR:
         notification.error({
           message: 'oops',
           description: message.text,
+          duration: duration,
         });    
         break;
       case MessageType.GOOD:
         notification.success({
           message: 'nice',
           description: message.text,
+          duration: duration,
         });    
         break;
       default:
@@ -112,6 +120,8 @@ export class MessageServiceImpl {
   }
 
 }
+
+const MESSAGE_DEFAULT_DURATION_SEC = 4.5;
 
 export enum MessageType {
   INFO = 'INFO',
@@ -129,11 +139,16 @@ export interface Message {
 }
 
 export interface MessageOptions {
+
+  durationSec?: number,
+  
+  doNoAutoClose?: boolean,
+
   /**
    * extra data to be kept with the message.
    * (normally, not displayed)
    */
-  extra: any;
+  extra?: any;
 }
 
 
