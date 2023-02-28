@@ -1,3 +1,5 @@
+let debug = false;
+
 export const wsChannelStateStore = {
   namespaced: true,
   state: <WSChannelState>{
@@ -9,14 +11,19 @@ export const wsChannelStateStore = {
     {
       if (state.isConnected != value) {
         state.isConnected = value;
-        console.log(`state.isConnected changed to`, state.isConnected);
+        if (debug) console.log(`state.isConnected changed to`, state.isConnected);
       } else {
-        console.log(`state.isConnected intact and it is`, state.isConnected);
+        if (debug) console.log(`state.isConnected intact and it is`, state.isConnected);
       }
+    },
+    changeClientId(state: WSChannelState, clientId: number)
+    {
+      state.clientId = clientId;
     },
   },
 };
 
 export interface WSChannelState {
   isConnected: boolean;
+  clientId: number;
 }

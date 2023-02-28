@@ -5,15 +5,19 @@
       color: 'white',
     }"
     :body-style="{ padding: '0.8em' }">
+    <div class="draw-monitor-item switch">
+      <a-switch v-model="doShowDrawResultAsToast" />
+      use pop message
+    </div>
     <div class="draw-monitor-item"
-    v-for="it in ticketLogList" v-bind:key="it.ticket">
+    v-for="it in ticketLogList" v-bind:key="it.id">
       <span class='my teal circular label'>
-        {{ it.ticket }}
+        #{{ it.ticket }}
       </span>
     </div>
-    <div class="draw-monitor-item">
+    <div v-if="personWon" class="draw-monitor-item">
       <span class='my orange circular label'>
-        {{ wonByTicket }}
+        #{{ wonByTicket }}
       </span>
       <span class="my orange label">
         <i class="trophy icon"></i>
@@ -24,6 +28,10 @@
 </template>
 
 <style scoped>
+div.draw-monitor-item.switch {
+  display: block;
+  margin: 4px;
+}
 div.draw-monitor-item {
   display: inline-block;
   margin-left: 0;
@@ -34,22 +42,87 @@ div.draw-monitor-item {
 
 <script lang="ts">
 import Vue from 'vue';
+import { WSChannelService, WsMessage, WsMessageType } from '@/service/WSChannelService';
+import { MessageService } from '@/service/MessageService';
+import { rootStoreState } from '@/stores';
 
 export default Vue.extend({
   name: 'DrawMonitorPane',
+  computed: {
+    iWSChannelService: ()=>WSChannelService(),
+    iMessageService: ()=>MessageService(),
+  },
+  mounted(){
+    this.resetTicketData();
+    this.iWSChannelService.listenToMessage(this.onMessage);
+  },
+  destroyed(){
+    this.iWSChannelService.stopListening(this.onMessage);
+  },
   data() {
     return {
-      personWon: 'John Ma',
-      wonByTicket: '#36',
-      ticketLogList: [
-        { ticket: '#3' },
-        { ticket: '#67' },
-        { ticket: '#24' },
-        { ticket: '#23' },
-        { ticket: '#34' },
-        { ticket: '#36' },
-      ]
-    }
+      personWon: null,
+      wonByTicket: null,
+      doShowDrawResultAsToast: true,
+      ticketIdCounter: 1,
+      ticketLogList: [],
+    } as ViewModel;
   },
+  methods: {
+    onMessage(message: WsMessage){
+      if (message.type == WsMessageType.ANNOUNCEMENT) {
+        this.iMessageService.good(message.text || 'ANNOUNCEMENT', {
+          durationSec: 3.0,
+        });
+
+      } else if (message.type == WsMessageType.DRAW_START) {
+        this.iMessageService.good(message.text || 'DRAW_START', {
+          durationSec: 6.0,
+        });
+        this.resetTicketData();
+
+      } else if (message.type == WsMessageType.DRAW_RESULT) {
+        this.ticketLogList.push({ 
+          id: this.ticketIdCounter++, 
+          ticket: message.data,
+        });
+        if (this.doShowDrawResultAsToast) {
+          this.iMessageService.info(message.text || 'DRAW_RESULT', {
+            durationSec: 0.8,
+          });
+        }
+
+      } else if (message.type == WsMessageType.DRAW_END) {
+        this.personWon = message.data.winnerInfo.name;
+        this.wonByTicket = message.data.winnerInfo.guess;
+        if (this.ticketLogList[this.ticketLogList.length-1].ticket == this.wonByTicket) {
+          this.ticketLogList.splice(this.ticketLogList.length-1, 1);
+        }
+        this.iMessageService.info(message.text || 'DRAW_END', {
+          doNoAutoClose: true,
+        });
+
+      }
+    },
+    resetTicketData(){
+      this.ticketIdCounter = 1;
+      this.ticketLogList = [];
+      this.wonByTicket = null;
+      this.personWon = null;
+    }
+  }
 });
+
+interface ViewModel {
+  personWon: string | null;
+  wonByTicket: number | null;
+  doShowDrawResultAsToast: boolean;
+  ticketIdCounter: number;
+  ticketLogList: TicketItem[];
+}
+
+interface TicketItem {
+  id: number;
+  ticket: number;
+}
 </script>

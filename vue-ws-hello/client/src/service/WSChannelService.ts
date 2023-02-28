@@ -4,11 +4,14 @@ import { rootStore, rootStoreState } from "@/stores";
 const DEFAULT_WS_BASE_URL = '/ws/1.0/luckyDrawChannel';
 const DEFAULT_ROOT_STORE = rootStore;
 
+type WS_MSG_LISTENER =  (message: WsMessage)=>void;
+
 export class WSChannelServiceImpl {
 
   debug: boolean = false;
   
   wsBaseUrl: string;
+  messageListenerList: WS_MSG_LISTENER[] = [];
 
   private ws?: WebSocket;
   private rootStore: Store<any>;
@@ -53,7 +56,21 @@ export class WSChannelServiceImpl {
   }
 
   private onMessage(event: MessageEvent){
-    console.log('ws onMessage', event.data);
+    let message: WsMessage|null = null;
+    if ((<string>event.data).startsWith('{')) {
+      message = JSON.parse(<string>event.data);
+    }
+    if (message?.type){
+      if (message?.type == WsMessageType.INIT) {
+        if (this.debug) console.log('ws INIT onMessage', message.data);
+        rootStore.commit('wsChannelStateStore/changeClientId', message.data);
+      }
+      for (let listener of this.messageListenerList) {
+        listener(message);
+      }
+    } else {
+      console.log('ws onMessage', event.data);
+    }
   }
 
   public ping(): void {
@@ -62,6 +79,15 @@ export class WSChannelServiceImpl {
     } else {
       this.ws?.send('just to serve a ping.');
     }
+  }
+
+  public listenToMessage(listener:(message: WsMessage)=>void){
+    this.messageListenerList.push(listener);
+  }
+
+  public stopListening(listener:(message: WsMessage)=>void){
+    let found = this.messageListenerList.indexOf(listener);
+    this.messageListenerList.splice(found, 1)
   }
 
 }
@@ -76,4 +102,18 @@ export function WSChannelService(debug = false): WSChannelServiceImpl
   }
   Singleton.debug = debug;
   return Singleton;
+}
+
+export enum WsMessageType {
+  'INIT' = 'INIT',
+  'ANNOUNCEMENT'= 'ANNOUNCEMENT',
+  'DRAW_START' = 'DRAW_START',
+  'DRAW_RESULT' = 'DRAW_RESULT',
+  'DRAW_END' = 'DRAW_END',
+}
+
+export interface WsMessage {
+  type: WsMessageType,
+  text?: string,
+  data?: any,
 }

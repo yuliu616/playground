@@ -6,8 +6,6 @@
     }">
     <a-button class="control-button" v-on:click="startPressed">Start</a-button>
     <a-button class="control-button" v-on:click="stopPressed">Stop</a-button>
-    <a-button class="control-button" v-on:click="restartPressed">Restart</a-button>
-    <a-button class="control-button" v-on:click="joinPressed">Join</a-button>
   </a-card>
 </template>
 
@@ -20,21 +18,31 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { RestService } from '@/service/RestService';
+import { WSChannelService } from '@/service/WSChannelService';
+import { rootStoreState } from '@/stores';
 
 export default Vue.extend({
   name: 'LuckyDrawControlBar',
+  computed: {
+    iRestService: ()=>RestService(),
+    iWSChannelService: ()=>WSChannelService(),
+  },
+  created(){
+    if (!rootStoreState.wsChannelStateStore.isConnected){
+      console.log('establish ws connection ...');
+      this.iWSChannelService.connect();
+    } else {
+      this.iWSChannelService.ping();
+      console.log('ws clientId =', rootStoreState.wsChannelStateStore.clientId);
+    }
+  },
   methods: {
     startPressed(){
-      console.log('startPressed');
+      this.iRestService.put_luckyDraw_start();
     },
     stopPressed(){
-      console.log('stopPressed');
-    },
-    restartPressed(){
-      console.log('restartPressed');
-    },
-    joinPressed(){
-      console.log('joinPressed');
+      this.iRestService.put_luckyDraw_stop();
     },
   }
 });

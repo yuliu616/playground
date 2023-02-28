@@ -20,8 +20,27 @@ export class RestServiceImpl {
     return await axios.get(`${this.apiBaseUrl}/time`).then(res=>res.data);
   }
 
+  async post_luckyDraw_join(options: PostOptions<post_luckyDraw_join_params>): Promise<any> {
+    return await axios.post(`${this.apiBaseUrl}/luckyDraw/join`, options.body).then(res=>res.data);
+  }
+
+  async put_luckyDraw_start(): Promise<any> {
+    return await axios.put(`${this.apiBaseUrl}/luckyDraw/start`, {}).then(res=>res.data);
+  }
+
+  async put_luckyDraw_stop(): Promise<any> {
+    return await axios.put(`${this.apiBaseUrl}/luckyDraw/stop`, {}).then(res=>res.data);
+  }
+
 }
 
 export function RestService(): RestServiceImpl {
   return new RestServiceImpl();
+}
+
+interface post_luckyDraw_join_params {
+  clientId: number;
+  name: string;
+  guess: number;
+  contribution: number;
 }
