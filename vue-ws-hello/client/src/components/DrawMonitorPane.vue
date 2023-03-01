@@ -46,21 +46,38 @@ import { WSChannelService, WsMessage, WsMessageType } from '@/service/WSChannelS
 import { MessageService } from '@/service/MessageService';
 import { rootStoreState } from '@/stores';
 
+let debug = false;
+
 export default Vue.extend({
   name: 'DrawMonitorPane',
   computed: {
     iWSChannelService: ()=>WSChannelService(),
     iMessageService: ()=>MessageService(),
   },
+  created(){
+    if (!rootStoreState.wsChannelStateStore.isConnected){
+      if (debug) console.log('establish ws connection ...');
+      this.iWSChannelService.connect();
+    }
+  },
   mounted(){
     this.resetTicketData();
-    this.iWSChannelService.listenToMessage(this.onMessage);
+    let job = setInterval(()=>{
+      if (rootStoreState.wsChannelStateStore.isConnected) {
+      this.iWSChannelService.listenToMessage(this.onMessage);
+      this.isListeningWs = true;
+      clearInterval(job);
+    }
+    }, 100);
   },
   destroyed(){
-    this.iWSChannelService.stopListening(this.onMessage);
+    if (this.isListeningWs) {
+      this.iWSChannelService.stopListening(this.onMessage);
+    }
   },
   data() {
     return {
+      isListeningWs: false,
       personWon: null,
       wonByTicket: null,
       doShowDrawResultAsToast: true,
@@ -70,6 +87,7 @@ export default Vue.extend({
   },
   methods: {
     onMessage(message: WsMessage){
+      if (debug) console.log('DrawMonitorPane.onMessage:', message);
       if (message.type == WsMessageType.ANNOUNCEMENT) {
         this.iMessageService.good(message.text || 'ANNOUNCEMENT', {
           durationSec: 3.0,
@@ -114,6 +132,7 @@ export default Vue.extend({
 });
 
 interface ViewModel {
+  isListeningWs: boolean;
   personWon: string | null;
   wonByTicket: number | null;
   doShowDrawResultAsToast: boolean;

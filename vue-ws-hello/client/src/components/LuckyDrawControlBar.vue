@@ -22,6 +22,8 @@ import { RestService } from '@/service/RestService';
 import { WSChannelService } from '@/service/WSChannelService';
 import { rootStoreState } from '@/stores';
 
+let debug = false;
+
 export default Vue.extend({
   name: 'LuckyDrawControlBar',
   computed: {
@@ -30,11 +32,11 @@ export default Vue.extend({
   },
   created(){
     if (!rootStoreState.wsChannelStateStore.isConnected){
-      console.log('establish ws connection ...');
+      if (debug) console.log('establish ws connection ...');
       this.iWSChannelService.connect();
     } else {
       this.iWSChannelService.ping();
-      console.log('ws clientId =', rootStoreState.wsChannelStateStore.clientId);
+      if (debug) console.log('ws clientId =', rootStoreState.wsChannelStateStore.clientId);
     }
   },
   methods: {
