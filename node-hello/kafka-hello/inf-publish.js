@@ -40,6 +40,8 @@ let PARTITION_ID = 0;
 // let TOPIC = 'test';
 let TOPIC = process.argv.length > 3 ? process.argv[3] : 'test';
 
+let REPEATING_INTERVAL = 1000; //ms
+
 let producer = new kafka.Producer(kafkaClient, {
   ackTimeoutMs: 10000, // ms
   requireAcks: 1,
@@ -47,37 +49,42 @@ let producer = new kafka.Producer(kafkaClient, {
 
 let payloadFile = process.argv.length > 2 ? process.argv[2] : 'payload.yaml';
 console.log(`load file for payload data: ${payloadFile}`);
-let payload_message = fs.readFileSync(`./${payloadFile}`).toString('utf-8');
 let payloads = [];
-if (/\n---\n/g.test(payload_message)){
-  let pattern = /\n---\n/g;
-  let i = 0;
-  while (true){
-    let found = pattern.exec(payload_message);
-    if (!found) {
+function loadPayload(){
+  let payload_message = fs.readFileSync(`./${payloadFile}`).toString('utf-8');
+  payloads = [];
+  if (/\n---\n/g.test(payload_message)){
+    let pattern = /\n---\n/g;
+    let i = 0;
+    while (true){
+      let found = pattern.exec(payload_message);
+      if (!found) {
+        payloads.push({
+          partition: PARTITION_ID,
+          topic: TOPIC,
+          messages: payload_message.substring(i),
+        });
+        break;
+      }
       payloads.push({
         partition: PARTITION_ID,
         topic: TOPIC,
-        messages: payload_message.substring(i),
+        messages: payload_message.substring(i, found.index),
       });
-      break;
+      i = found.index + found[0].length;
     }
+  } else {
     payloads.push({
       partition: PARTITION_ID,
       topic: TOPIC,
-      messages: payload_message.substring(i, found.index),
+      messages: payload_message,
+      // messages: `time is now ${new Date().toUTCString()}` // messages could be an array
     });
-    i = found.index + found[0].length;
   }
-} else {
-  payloads.push({
-    partition: PARTITION_ID,
-    topic: TOPIC,
-    messages: payload_message,
-    // messages: `time is now ${new Date().toUTCString()}` // messages could be an array
-  });
+  console.log('payloads =', payloads);
 }
-console.log('payloads =', payloads);
+loadPayload();
+
 // let payloads = [{
 //   partition: PARTITION_ID,
 //   topic: TOPIC,
@@ -91,17 +98,19 @@ producer.on('error', (err)=>{
   console.error(`producer got error: `, err);
 });
 
-let producer_send = payload=>new Promise((resolve, reject)=>{
-  if (echoPayloadOnSending) {
-    console.log(`sending payload:\n`+payload[0].messages);
-  }
-  producer.send(payload, (err, res)=>{
-    if (err) {
-      reject(err);
-    } else {
-      resolve(res);
+let producer_send_inf = ()=>new Promise((resolve, reject)=>{
+  setInterval(()=>{
+    loadPayload(); // reload payload file
+    if (echoPayloadOnSending) {
+      console.log(`sending payload:\n`+payloads[0].messages);
     }
-  });
+    producer.send(payloads, (err, res)=>{
+      if (err) {
+        reject(err);
+      }
+      // if pass, do nothing.
+    });
+  }, REPEATING_INTERVAL);
 });
 
 let client_close = ()=>new Promise((resolve, reject)=>{
@@ -115,7 +124,7 @@ producer.on('ready', ()=>{
 
   Promise.resolve(null).then(()=>{ // empty promise to make the syntax pretty.
     console.log(new Date().toISOString(), `producer ready.`);
-    return producer_send(payloads);
+    return producer_send_inf();
   }).then(res=>{
     console.log(new Date().toISOString(), `message sent. res=`, res);
     return client_close();
