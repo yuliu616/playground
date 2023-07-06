@@ -2,6 +2,9 @@
 let YAML = require('yamljs');
 let fs = require('fs');
 
+let indentSpace = 2;
+let inlineForDepthOver = 10;
+
 {
   let data = {
     "id": 12001,
@@ -10,7 +13,7 @@ let fs = require('fs');
     "gender": "MALE",
     "dateOfBirth": "1990-10-25"
   };
-  let str = YAML.stringify(data, 2);
+  let str = YAML.stringify(data, inlineForDepthOver, indentSpace);
   console.log('YAML for json:');
   console.log(str);
 }
@@ -26,7 +29,7 @@ let fs = require('fs');
     "牛肉",
     "烧肉"
   ];
-  let str = YAML.stringify(data, 2);
+  let str = YAML.stringify(data, inlineForDepthOver, indentSpace);
   console.log('YAML for json:');
   console.log(str);
 }
@@ -58,7 +61,7 @@ let fs = require('fs');
       }
     ]
   };
-  let str = YAML.stringify(data, 2);
+  let str = YAML.stringify(data, inlineForDepthOver, indentSpace);
   console.log('YAML for json:');
   console.log(str);
 }
