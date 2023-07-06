@@ -5,6 +5,7 @@ Thumbs.db
 # IDEs and editors
 .vs
 /.vscode
+!.vscode/extensions.json
 /.idea
 *.iml
 
