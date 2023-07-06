@@ -1,9 +1,13 @@
 {
   "name": "axios-hello",
   "version": "1.0.0",
+  "main": "fetchUrl.js",
+  "type": "module",
+  "scripts": {
+    "start": "node fetchUrl.js"
+  },
   "dependencies": {
-    "axios": "^0.21.1",
-    "bluebird": "^3.7.2",
-    "pm2": "^5.1.0"
+    "axios": "^1.4.0",
+    "bluebird": "^3.7.2"
   }
 }
