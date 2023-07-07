@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
+  <script src="hello-vue3.js"></script>
+</head>
+<body style="padding: 2em;" onload="init()">
+  <div id="my-app" class="ui cards">
+
+    <div class="card">  
+      <div class="content">
+        <div class="header">
+          Hello Vue
+        </div>
+        <div class="meta">
+          {{ message }}
+        </div>
+        <div class="description">
+          This is a hello world app.
+        </div>      
+      </div>
+
+      <div class="extra content">
+        <div class="ui two buttons">
+          <div class="ui basic red button">Apple</div>
+          <div class="ui basic yellow button">Orange</div>
+        </div>
+      </div>
+      <div class="ui bottom attached button" v-on:click="reverseItemList">
+        <i class="close icon"></i>
+        Reverse cards
+      </div>
+    </div>
+
+    <div class="blue card" v-for="item in itemList" v-bind:key="item.id">
+      <div class="content">
+        <div class="header" v-bind:data-tooltip="item.id">
+          Card {{ item.itemCode }}
+        </div>
+        <div class="meta" v-if="item.itemCode.match(/Plus/i)">
+          PLUS
+        </div>
+        <div class="description">
+          {{ item.itemName }}
+        </div>      
+      </div>
+      <div class="ui bottom attached button"
+        v-bind:class="{red: item.id %2==0, blue: item.id %2==1}">
+        <i class="close icon"></i>
+        Close
+      </div>  
+    </div>
+
+    <div class="card">
+      <div class="content">
+        <form class="ui form">
+  
+          <div class="field">
+            <label>Product Code</label>
+            <input type="text" v-model="draftItem.itemCode">
+          </div>
+          <div class="field">
+            <label>Product Name</label>
+            <input type="text" v-model="draftItem.itemName">
+          </div>
+          
+        </form>    
+      </div>
+      <div class="ui bottom attached button" v-on:click="onCreateProductPressed(draftItem)">
+        <i class="add icon"></i>
+        Create Product
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

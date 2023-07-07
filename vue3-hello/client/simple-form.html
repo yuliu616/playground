@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+  <script src="simple-form.js"></script>
+</head>
+<body style="padding: 2em;" onload="init()">
+<div id="my-app">
+
+  <div class="ui message" v-bind:class="{ negative: topMessage.isError }"
+    v-show="topMessage.visible">
+    <i class="close icon" v-on:click="hideTopMessage()"></i>
+    <div class="header" v-if="topMessage.header">
+      {{ topMessage.header }}
+    </div>
+    <p>{{ topMessage.message }}</p>
+  </div>
+
+  <div class="ui cards">
+    <div class="card">
+  
+      <div class="content">
+        <form class="ui form">
+  
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" placeholder="First Name" 
+              v-model="formData.firstName">
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" placeholder="Last Name"
+              v-model="formData.lastName">
+          </div>
+          
+        </form>    
+      </div>
+      <div class="ui bottom attached button" v-on:click="onCreationFormSubmitted(formData)">
+        <i class="add icon"></i>
+        Create Person
+      </div>
+  
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
