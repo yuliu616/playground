@@ -1,0 +1,47 @@
+/* page base */
+body.main {
+  background-color: whitesmoke;
+  transition: color 0.5s, background-color 0.5s;
+}
+
+.w100 {
+  width: 100%;
+}
+
+/* my card */
+.my.solo-card.holder {
+  margin: 0.1rem auto;
+  max-width: 50rem;
+}
+.my.cards.holder {
+  margin: 0;
+  padding: 0.4rem;
+  display: flex; 
+  flex-flow: row wrap;
+}
+.my.solo-card {
+  margin: 0.5em 0;
+}
+.my.card {
+  width: 30rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
+.my.small.card {
+  width: 22rem;
+}
+.my.big.card {
+  width: 46rem;
+}
+.my.huge.card {
+  width: 120rem;
+}
+
+/* fix a-input-number width issue */
+.my.ant.input-number {
+  width: 100%;
+}
+
+#app {
+  
+}
