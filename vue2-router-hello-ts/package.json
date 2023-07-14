@@ -1,5 +1,5 @@
 {
-  "name": "vue-router-hello-ts",
+  "name": "vue2-router-hello-ts",
   "version": "0.1.0",
   "scripts": {
     "start": "vue-cli-service serve",
