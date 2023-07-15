@@ -1,11 +1,22 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import HelloWorld from './components/HelloWorld.vue';
 import { RouterLink, RouterView } from 'vue-router';
+
+let favorColor = import.meta.env.VITE_FAVOR_COLOR;
+let logoBorderThick = import.meta.env.VITE_LOGO_BORDER_THICK;
+
+let logoBorder = computed(()=>{
+  return `${logoBorderThick}px solid ${favorColor}`;
+});
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <img alt="Vue logo" class="logo"
+      src="@/assets/logo.svg" width="125" height="125"
+      :style="{ border: logoBorder }"
+    />
 
     <div class="wrapper">
       <HelloWorld msg="Nice, you did it!" />
