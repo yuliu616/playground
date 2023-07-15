@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-const WS_URL_PROTOCL = "ws://";
-const WS_BASE_URL = '/ws/1.0/luckyDrawChannel';
+const WS_FULL_URL = import.meta.env.VITE_WS_FULL_URL;
+// const WS_BASE_URL = '/ws/1.0/luckyDrawChannel';
 // const WS_URL = 'ws://localhost:8888/ws/1.0/luckyDrawChannel';
 
 type WS_MSG_LISTENER =  (message: WsMessage)=>void;
@@ -16,7 +16,7 @@ export interface WebSocketMessageStore {
 
 let useWebSocketMessageStore = defineStore('webSocketMessage', {
   state: ()=><WebSocketMessageStore>({
-    debug: true, // TODO
+    debug: !!(+import.meta.env.VITE_WebSocketMessageStore_debug),
     ws: null,
     isConnected: false,
     messageListenerList: [],
@@ -32,8 +32,13 @@ let useWebSocketMessageStore = defineStore('webSocketMessage', {
     },
     connect(): void {
       if (this.ws == null) {
-        // let url = WS_URL;
-        let url = WS_URL_PROTOCL + window.location.host + WS_BASE_URL;
+        let url: string = WS_FULL_URL;
+        // let url: string;
+        // if (window.location.protocol == 'https:') {
+        //   url = 'wss:' + window.location.host + WS_BASE_URL;
+        // } else {
+        //   url = 'ws:' + window.location.host + WS_BASE_URL;
+        // }
         if (this.debug) console.log('connect to url:', url);
         let ws = new WebSocket(url);
         ws.onerror = (ev)=>this.onError(ev);

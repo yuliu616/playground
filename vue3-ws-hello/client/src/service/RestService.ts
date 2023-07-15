@@ -2,7 +2,8 @@ import { type HealthCheckDto } from "@/model/HealthCheckDto";
 import axios from "axios";
 import { type PostOptions } from "./HttpServiceCommon";
 
-const REST_API_BASE_URL = '/api/1.0';
+const REST_API_BASE_URL = import.meta.env.VITE_REST_API_BASE_URL;
+// const REST_API_BASE_URL = '/api/1.0';
 // const REST_API_BASE_URL = 'http://localhost:8888/api/1.0';
 
 export class RestServiceImpl {

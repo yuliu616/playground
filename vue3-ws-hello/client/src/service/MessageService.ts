@@ -156,10 +156,11 @@ class Singleton {
   static value: MessageServiceImpl;
 }
 
-export function MessageService(debug = false) {
+export function MessageService() {
   if (!Singleton.value) {
     Singleton.value = new MessageServiceImpl();
   }
-  Singleton.value.debug = debug;
+  Singleton.value.debug = 
+    !!(+import.meta.env.VITE_MessageService_debug);
   return Singleton.value;
 }
