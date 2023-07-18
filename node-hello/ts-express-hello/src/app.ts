@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 import * as express from 'express';
 
 let app = express();
@@ -12,7 +12,7 @@ const VERSION_DESCRIPTION = 'demo express app with ts-node';
 let serverInstanceRandId = 1000+Math.floor(16000 * Math.random());
 
 function timeStr(): string {
-  return moment().format();
+  return dayjs().format();
 }
 
 app.get('/works', (req, res, next)=>{
