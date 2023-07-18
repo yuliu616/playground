@@ -4,6 +4,7 @@ import 'ant-design-vue/dist/antd.min.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import Antd from 'ant-design-vue';
+import { useFontAwesome } from './fontAwesomeSetup';
 
 import App from './App.vue';
 import router from './router'; // import router related codes.
@@ -23,5 +24,6 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.use(Antd);
+useFontAwesome(app);
 
 app.mount('#app');

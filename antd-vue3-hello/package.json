@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "@fortawesome/fontawesome-svg-core": "6.4.x",
+    "@fortawesome/free-solid-svg-icons": "6.4.x",
+    "@fortawesome/vue-fontawesome": "3.0.x",
     "ant-design-vue": "^3.2.20",
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
