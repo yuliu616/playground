@@ -1,6 +1,8 @@
 <template>
   <div>
-    <a-button ghost @click="onClicked()">
+    <a-button class="my antd-btn" ghost
+      @click="onClicked()"
+    >
       {{ caption }} {{ counter }}
     </a-button>
     <TheWelcome />

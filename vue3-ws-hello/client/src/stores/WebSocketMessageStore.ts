@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { ref, type Ref } from 'vue';
 
 const WS_FULL_URL = import.meta.env.VITE_WS_FULL_URL;
 // const WS_BASE_URL = '/ws/1.0/luckyDrawChannel';
@@ -8,17 +9,18 @@ type WS_MSG_LISTENER =  (message: WsMessage)=>void;
 
 export interface WebSocketMessageStore {
   debug: boolean;
-  ws: WebSocket|null;
-  isConnected: boolean;
-  clientId?: number;
+  ws: Ref<WebSocket|null>;
+  isConnected: Ref<boolean>;
+  clientId: Ref<number|undefined>;
   messageListenerList: WS_MSG_LISTENER[];
 }
 
 let useWebSocketMessageStore = defineStore('webSocketMessage', {
   state: ()=><WebSocketMessageStore>({
     debug: !!(+import.meta.env.VITE_WebSocketMessageStore_debug),
-    ws: null,
-    isConnected: false,
+    ws: ref(null),
+    isConnected: ref(false),
+    clientId: ref(undefined),
     messageListenerList: [],
   }),
   actions: {

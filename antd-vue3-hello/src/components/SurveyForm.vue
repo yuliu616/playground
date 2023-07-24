@@ -1,7 +1,12 @@
 <template>
-  <div class="my solo-card holder" style="max-width: 30rem;">
+  <div class="my big card">
     <a-badge-ribbon text="Fill This">
-      <a-card class="my solo-card">
+      <a-card class="my solo-card"
+        :head-style="{ 
+          backgroundColor: 'crimson',
+          color: 'white',
+        }"
+      >
         <template #title>
           Survey Form
         </template>
@@ -13,19 +18,20 @@
 
           <a-form-item label="Name">
             <a-input v-model:value.trim="surveyForm.name"
-              class="w100" allow-clear
+              allow-clear
               placeholder="eg. Jackson"
             />
           </a-form-item>
           <a-form-item label="Contact email">
             <a-input v-model:value.trim="surveyForm.email"
-              class="w100" allow-clear type="email"
+              allow-clear type="email"
               placeholder="eg. someone@outlook.com"
             />
           </a-form-item>
           <a-form-item label="Age">
             <a-input-number v-model:value="surveyForm.age"
-              class="my ant input-number" autofocus 
+              class="my antd-input-number"
+              allow-clear
               :min="1" :max="120"
             />
           </a-form-item>
@@ -37,7 +43,10 @@
           </a-form-item>
           <a-form-item label="Last watching">
             <a-date-picker v-model:value="surveyForm.lastWatchedDate"
-              class="w100" picker="date" allow-clear
+              class="my antd-date-picker" picker="date" 
+              :dropdownClassName="(darkTheme ? 'my antd-dropdown-menu-dark':'')"
+              allow-clear
+              input-read-only
               placeholder="Last time(day) watching a movie"
               valueFormat="YYYY-MM-DD"
               format="(dddd) D, MMMM YYYY"
@@ -46,8 +55,10 @@
           </a-form-item>
           <a-form-item label="Rating">
             <a-select v-model:value="surveyForm.rating"
+              class="my antd-select"
+              :dropdownClassName="(darkTheme ? 'my antd-dropdown-menu-dark':'')"
               :options="RatingRankOptions"
-              class="w100" allow-clear
+              allow-clear
               placeholder="rate from 1 to 5 star(s)">
             </a-select>
           </a-form-item>
@@ -57,11 +68,22 @@
               :auto-size="{minRows: 4, maxRows: 8}"
             ></a-textarea>
           </a-form-item>
-          <a-form-item class="button-bar" :wrapper-col="{ offset: 0 }">
-            <a-badge :count="submitCounter">
-              <a-button type="primary" html-type="submit">Post</a-button>
+          <a-form-item class="my button-bar" :wrapper-col="{ offset: 0 }">
+            <a-badge :count="submitCounter" style="margin-right: 0.8em;">
+              <a-button class="my antd-btn"
+                :ghost="darkTheme"
+                type="primary" html-type="submit"
+              >
+                Post
+              </a-button>
             </a-badge>
-            <a-button ghost danger @click.prevent="clearForm()">clear</a-button>
+            <a-button class="my antd-btn"
+              :ghost="darkTheme"
+              danger
+              @click.prevent="clearForm()"
+            >
+              clear
+            </a-button>
           </a-form-item>
 
           <div class="NameShuffleFieldWrapper">
@@ -105,6 +127,10 @@ export default {
     // capture the event emitter for later use.
     eventEmitter = (event, data)=>ctx.emit(event, data);
   },
+  computed: {
+    iMessageService: ()=>MessageService(),
+    darkTheme: ()=>!!(+import.meta.env.VITE_DarkTheme),
+  },
   data(){
     return {
       surveyForm: <MovieSurvey>{
@@ -119,9 +145,6 @@ export default {
         })),
       submitCounter: ref(0),
     };
-  },
-  computed: {
-    iMessageService: ()=>MessageService(),
   },
   methods: {
     onSubmission(){
@@ -149,11 +172,7 @@ export default {
 </script>
 
 <style scoped>
-.button-bar button {
-  margin-right: 0.4rem;
-}
-
 .NameShuffleFieldWrapper {
-  margin-top: 0.5rem;
+  margin-top: 0.5em;
 }
 </style>

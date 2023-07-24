@@ -1,19 +1,31 @@
 <template>
-  <div>
-    <div style="margin: 0.4rem 0;">
-      <a-button ghost @click="loadData()">
+  <main>
+
+    <div class="my button-bar">
+      <a-button class="my antd-btn"
+        @click="(!isFetching && loadData())"
+        :ghost="darkTheme"
+      >
         Reload
       </a-button>
     </div>
-    <a-table :columns="tableColumns"
-      :dataSource="tableData"
-      :loading="isFetching" :pagination="pagination"
-    >
-      <template #emptyText>
-        No Records.
+
+    <a-spin :spinning="isFetching" tip="Loading ...">
+      <template #indicator>
+        <font-awesome-icon icon="cog" spin />
       </template>
-    </a-table>
-  </div>
+      <a-table class="my antd-t" rowClassName="my antd-tr"
+        :columns="tableColumns"
+        :scroll="{ x: 720 }"
+        :dataSource="tableData" 
+        :pagination="pagination"
+      >
+        <template #emptyText>
+          No Records.
+        </template>
+      </a-table>
+    </a-spin>
+  </main>
 </template>
 
 <script lang="ts">
@@ -21,6 +33,8 @@ import { ref } from 'vue';
 import { type TablePaginationConfig } from 'ant-design-vue';
 import { fetchPersonList, type Person } from '@/model/PersonData';
 import { MessageService } from '@/service/MessageService';
+
+const logger: ILogger = console;
 
 const COLUMNS = [
   {
@@ -57,11 +71,20 @@ const COLUMNS = [
   },
 ];
 
+interface ViewModel {
+  tableData: Ref<People[]>;
+  isFetching: Ref<boolean>;
+  pagination: Ref<TablePaginationConfig>;
+  currentPageIndex: Ref<number>;
+}
+
 export default {
   computed: {
     iMessageService: ()=>MessageService(),
     tableColumns: ()=>COLUMNS,
+    autoLoadOnStart: ()=>true,
     pageSize: ()=>8,
+    darkTheme: ()=>!!(+import.meta.env.VITE_DarkTheme),
   },
   data() {
     return {
@@ -71,9 +94,19 @@ export default {
       currentPageIndex: ref(0),
     };
   },
+  async mounted() {
+    if (this.autoLoadOnStart) {
+      await this.loadData();
+    }
+  },
   methods: {
-    async loadData(targetPage?: number): Promise<number>{
-      // console.log('reloadData targetPage=', targetPage);
+    formatData(list: People[]) {
+    },
+    /**
+     * return record count of requested page.
+     */
+    async loadData(targetPage?: number): Promise<number> {
+      // logger?.log('reloadData targetPage=', targetPage);
       this.isFetching = true;
       let isReloading: boolean = (targetPage === undefined);
       if (targetPage === undefined) {
@@ -81,15 +114,22 @@ export default {
       }
       let offset = targetPage * this.pageSize;
       let targetPageSize = this.pageSize;
-      let list = await fetchPersonList({
-        offset: offset,
-        limit: targetPageSize,
-      });
-      // console.log('tableData=', JSON.stringify(this.tableData.map(it=>it.id),null,2));
+      let list: People[];
+      try {
+        list = await fetchPersonList({
+          offset: offset,
+          limit: targetPageSize,
+        });
+        this.formatData(list);
+        // logger?.log('tableData=', JSON.stringify(this.tableData.map(it=>it.id),null,2));
+      } catch (err) {
+        this.iMessageService.error({ message: 'failed to load data.'});
+        return 0;
+      }
 
       let switchPage = this.switchPage;
       let fakeTotal: number;
-      if (list.length == 0) {
+      if (list.length == 0 && offset > 0) {
         // next page is empty means last page reached,
         // update pagination to reflect this.
         this.pagination = <TablePaginationConfig>{
@@ -102,9 +142,9 @@ export default {
           },
         };
         this.isFetching = false;
-        // console.log('pagination =', this.pagination);
-        // console.log('currentPageIndex =', this.currentPageIndex);
-        // console.log('tableData.length =', this.tableData.length);
+        // logger?.log('pagination =', this.pagination);
+        // logger?.log('currentPageIndex =', this.currentPageIndex);
+        // logger?.log('tableData.length =', this.tableData.length);
         return 0;
       } else if (list.length >= targetPageSize) {
         // if the data is all full page,
@@ -129,9 +169,9 @@ export default {
       };
       this.currentPageIndex = targetPage;
       this.isFetching = false;
-      // console.log('pagination =', this.pagination);
-      // console.log('currentPageIndex =', this.currentPageIndex);
-      // console.log('tableData.length =', this.tableData.length);
+      // logger?.log('pagination =', this.pagination);
+      // logger?.log('currentPageIndex =', this.currentPageIndex);
+      // logger?.log('tableData.length =', this.tableData.length);
 
       if (isReloading) {
         this.iMessageService.info({ message: 'data reloaded.'});

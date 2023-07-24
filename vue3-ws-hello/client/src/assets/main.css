@@ -10,12 +10,12 @@ body.main {
 
 /* my card */
 .my.solo-card.holder {
-  margin: 0.1rem auto;
-  max-width: 50rem;
+  margin: 0.1em auto;
+  max-width: 50em;
 }
 .my.cards.holder {
   margin: 0;
-  padding: 0.4rem;
+  padding: 0.4em;
   display: flex; 
   flex-flow: row wrap;
 }
@@ -23,18 +23,18 @@ body.main {
   margin: 0.5em 0;
 }
 .my.card {
-  width: 30rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
+  width: 30em;
+  padding-right: 1em;
+  padding-bottom: 1em;
 }
 .my.small.card {
-  width: 22rem;
+  width: 22em;
 }
 .my.big.card {
-  width: 46rem;
+  width: 46em;
 }
 .my.huge.card {
-  width: 120rem;
+  width: 120em;
 }
 
 /* fix a-input-number width issue */

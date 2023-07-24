@@ -1,37 +1,39 @@
 <template>
-  <div>
-    <h1 v-if="!submitted">
-      This is a
-      <FormOutlined />form
-    </h1>
-    <a-alert v-if="submitted"
-      showIcon closable
-      type="success"
-      message="Form feedback"
-      description="form posted !!"
-    >
-      <template #icon><UploadOutlined /></template>
-    </a-alert>
+  <main class="my antd-cards holder">
+
+    <transition name="slide-fade">
+      <div class="my huge card" v-if="!submitted">
+        This is a
+        <FormOutlined />form
+      </div>
+    </transition>
+    <transition name="slide-fade">
+      <div class="my huge card" v-if="submitted">
+        <a-alert class="my antd-alert"
+          show-icon type="success"
+          closable
+          message="Form feedback"
+          description="form posted !!"
+        >
+          <template #icon><UploadOutlined /></template>
+        </a-alert>
+      </div>
+    </transition>
+
     <SurveyForm 
       @form-posted="onChildFormPosted"
       @form-cleared="onChildFormCleared"
     />
-  </div>
+  </main>
 </template>
 
 <script lang="ts">
 import SurveyForm from '@/components/SurveyForm.vue';
 import { ref } from 'vue';
-import { 
-  FormOutlined,
-  UploadOutlined,
-} from '@ant-design/icons-vue';
 
 export default {
   components: {
     SurveyForm: SurveyForm,
-    FormOutlined,
-    UploadOutlined,
   },
   data: ()=>({
     submitted: ref(false),
@@ -48,7 +50,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-h1 { color: white; }
-</style>

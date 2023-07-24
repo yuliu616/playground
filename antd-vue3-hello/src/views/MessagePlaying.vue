@@ -1,87 +1,106 @@
 <template>
   <div>
     <h2>Message Playing View</h2>
-
-    <div class="my solo-card holder" style="max-width: 50rem;">
-      <a-collapse class="my solo-card" v-model:activeKey="draftPanelActiveKey">
+    <main>
+    
+      <div class="my antd-solo-card holder" 
+      style="max-width: 60em; margin-bottom: 2em;">
+        <a-collapse v-model:activeKey="draftPanelActiveKey">
         <a-collapse-panel key="p1" header="Draft">
-        <a-form @submit.prevent="add"
-          layout="horizontal"
-          :label-col="{ span: 4 }"
-          :wrapper-col="{ span: 20 }"
-        >
-          <a-form-item label="Draft">
-            <a-textarea v-model:value="draftMessage" 
-              allow-clear
-              :auto-size="{minRows: 4, maxRows: 8}"
-              :maxlength="120"
-            ></a-textarea>
-          </a-form-item>
-          <a-form-item class="button-bar" 
-            :wrapper-col="{ offset: 4, span: 20 }"
+          <a-form @submit.prevent="add"
+            layout="horizontal"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 20 }"
           >
-            <a-button @click="add()"
-            type="primary">
-              add
-            </a-button>
-            <a-button @click="addJunk(10)">
-              <template #icon></template>
-              add junk
-            </a-button>
-            <a-button @click="fetchNews(50)"
-            danger>
-              <template #icon><AlertFilled /></template>
-              add news(CORS)
-            </a-button>
-            <a-button @click="clear"
-            danger>
-              <template #icon><DeleteFilled /></template>
-              clear
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </a-collapse-panel>
-      </a-collapse>
-    </div>
+            <a-form-item label="Draft">
+              <a-textarea v-model:value="draftMessage" 
+                allow-clear
+                :auto-size="{minRows: 4, maxRows: 8}"
+                :maxlength="120"
+              ></a-textarea>
+            </a-form-item>
+            <a-form-item class="button-bar" 
+              :wrapper-col="{ offset: 4, span: 20 }"
+            >
+              <a-button class="my antd-btn"
+                :ghost="darkTheme"
+                @click="add()"
+              >
+                add
+              </a-button>
+              <a-button class="my antd-btn"
+                :ghost="darkTheme"
+                @click="addJunk(10)"
+              >
+                add junk
+              </a-button>
+              <a-button class="my antd-btn"
+                :ghost="darkTheme"
+                danger
+                @click="fetchNews(50)"
+              >
+                <template #icon>
+                  <font-awesome-icon icon="skull-crossbones" style="margin-right: 0.4em;" />
+                </template>
+                add news(CORS)
+              </a-button>
+              <a-button class="my antd-btn"
+                :ghost="darkTheme"
+                danger
+                @click="clear()"
+              >
+                <template #icon>
+                  <font-awesome-icon icon="broom" style="margin-right: 0.4em;" />
+                </template>
+                clear
+              </a-button>
+            </a-form-item>
+          </a-form>
+        </a-collapse-panel>
+        </a-collapse>
+      </div>
     
-    <a-table :columns="tableColumns" :dataSource="tableData"
-      rowKey="id"
-      :pagination="pagination"
-      size="default" :stick="false"
-    >
-      <template #bodyCell="{ text, column, record }">
-        <template v-if="column.dataIndex == 'realpos'">
-          <div style="min-width: 2.4rem; display: inline-block;">
-            <a-tag v-if="record.icon_desc"
-            :color="record.icon_desc_color">
-              {{ record.icon_desc }}
-            </a-tag>
-          </div>
-          {{ text }}
+      <a-table class="my antd-t" rowClassName="my antd-tr"
+        :columns="tableColumns"
+        :scroll="{ x: 720 }"
+        :dataSource="tableData" 
+        :pagination="pagination"
+        rowKey="id"
+        size="default" :stick="false"
+      >
+        <template #bodyCell="{ text, column, record }">
+          <template v-if="column.dataIndex == 'realpos'">
+            <div style="min-width: 2.4em; display: inline-block;">
+              <a-tag v-if="record.icon_desc"
+              :color="record.icon_desc_color">
+                {{ record.icon_desc }}
+              </a-tag>
+            </div>
+            {{ text }}
+          </template>
+
+          <template v-if="column.dataIndex == 'fake_for_actions'">
+            <a-button class="my antd-btn crossing-item" shape="circle"
+              @click="deleteItem(record.realpos)"
+            >
+              <template #icon>
+                <font-awesome-icon icon="trash"/>
+              </template>
+            </a-button>
+          </template>
         </template>
 
-        <template v-if="column.dataIndex == 'fake_for_actions'">
-          <a-button @click="deleteItem(record.realpos)"
-          class="crossing-item" shape="circle">
-            <template #icon><DeleteFilled /></template>
-          </a-button>
+        <template #emptyText>
+          No Records.
         </template>
-      </template>
-
-      <template #emptyText>
-        No Records.
-      </template>
-    </a-table>
+      </a-table>
     
+    </main>
   </div>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue';
-import { 
-    DeleteFilled,
-    AlertFilled,
-  } from '@ant-design/icons-vue';
 import type { TablePaginationConfig } from 'ant-design-vue';
 
 // based on JSON data structure of weibo
@@ -109,9 +128,14 @@ interface MessageItem {
 }
 
 export default {
-  components: { 
-    DeleteFilled,
-    AlertFilled,
+  computed: {
+    darkTheme: ()=>!!(+import.meta.env.VITE_DarkTheme),
+    isEmptyList() {
+      return this.newsCount == 0;
+    },
+    newsCount() {
+      return this.tableData.length;
+    },
   },
   data() {
     return {
@@ -149,14 +173,6 @@ export default {
         },
       },
     };
-  },
-  computed: {
-    isEmptyList() {
-      return this.newsCount == 0;
-    },
-    newsCount() {
-      return this.tableData.length;
-    },
   },
   methods: {
     getItem(index: number): NewsItem {
@@ -212,19 +228,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-h2 { color: white; }
-
-.messageList {
-  border: 4px solid snow;
-  border-radius: 12px;
-  margin: 0.4rem;
-  padding: 0.4rem;
-  background-color: snow;
-}
-
-.button-bar .ant-btn {
-  margin-right: 1rem;
-}
-</style>

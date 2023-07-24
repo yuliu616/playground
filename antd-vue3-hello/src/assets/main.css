@@ -1,49 +1,449 @@
+:root {
+  --dark-bg-color: #303030; /* (same as DARK_BG_COLOR) */
+  --dark-fg-color: #f0f0f0; /* (same as DARK_FG_COLOR) */
+  --dark-panel-color: #242424; /* background of panel, like card, table. */
+  --dark-bar-color: #031526; /* like menu-bar, column header, etc. */
+  --dark-high-color: #414141; /* font background color when it is highlighted */
+  --dark-primary-color: #1890ff; /* refer to primary color of AntDesign */
+  --dark-selected-color: #000000; /* light highlight for current value */
+  --dark-inactive-color: #7e7e7e; /* grey out for inactive data */
+  --dark-symbol-color: #dadada; /* symbol drawn on panel/input box, often as button/link to be clicked */
+
+  /* these color is good for background, both light/dark theme */
+  --tag-color-info: #00a2a2;
+  --tag-color-error: #fb2a2a;
+  --tag-color-warn: #e9a900;
+  --tag-color-good: #34b234;
+
+  /* these color is good for background, both light/dark theme */
+  --tag-color-blue: #4169e5;
+  --tag-color-cyan: #00a2a2;
+  --tag-color-pink: #ff69b4;
+  --tag-color-red: #fb2a2a;
+}
+
 body.main {
-  color: white;
-  background: #181818;
+  /* (done by code) background: white; */
+  /* (done by code) color: black; */
   transition: color 0.5s, background-color 0.5s;
+}
+
+/* for h1, h2, h3, h4, h5, h6 */
+div.view-wrapper.dark h1 {
+  color: var(--dark-fg-color);
+}
+div.view-wrapper.dark h2 {
+  color: var(--dark-fg-color);
+}
+div.view-wrapper.dark h3 {
+  color: var(--dark-fg-color);
+}
+div.view-wrapper.dark h4 {
+  color: var(--dark-fg-color);
+}
+div.view-wrapper.dark h5 {
+  color: var(--dark-fg-color);
+}
+div.view-wrapper.dark h6 {
+  color: var(--dark-fg-color);
+}
+
+div.view-wrapper.dark {
+
+  /* for <a-alert> */
+  .my.antd-alert.ant-alert.ant-alert-info {
+    color: var(--dark-bg-color);
+    background-color: #91d5ff38;
+  }
+  .my.antd-alert.ant-alert.ant-alert-error {
+    background-color: #ff919138;
+  }
+  .my.antd-alert.ant-alert.ant-alert-warning {
+    background-color: #fbff9138;
+  }
+  .my.antd-alert.ant-alert.ant-alert-success {
+    background-color: #a7ff9138;
+  }
+  .my.antd-alert.ant-alert .ant-alert-message {
+    color: var(--dark-fg-color);
+  }
+  .my.antd-alert.ant-alert .ant-alert-description {
+    color: var(--dark-fg-color);
+  }
+
+  /* for a-table */
+  .my.antd-t {
+    .my.antd-tr {
+      background-color: var(--dark-panel-color);
+      .ant-table-cell {
+        color: var(--dark-fg-color);
+      }
+    }
+    .my.antd-tr.ant-table-row:hover > td {
+      background-color: var(--dark-high-color);
+    }
+    .my.antd-tr .ant-table-cell.ant-table-cell-row-hover {
+      background-color: var(--dark-high-color);
+    }
+  }
+  .my.antd-t .ant-table-thead .ant-table-cell {
+    background-color: var(--dark-bar-color);
+    color: var(--dark-fg-color);
+  }
+  .my.antd-t .ant-table-thead .ant-table-cell::before {
+    background-color: var(--dark-fg-color);
+  }
+  .my.antd-t .ant-table-expanded-row-fixed {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-fg-color);
+  }
+
+  /* for pagination */
+  .ant-pagination-item {
+    background-color: transparent;
+  }
+  .ant-pagination-item a {
+    color: var(--dark-fg-color);
+  }
+  .ant-pagination-item a:hover {
+    color: var(--dark-primary-color);
+  }
+  .ant-pagination-item-active a {
+    color: var(--dark-primary-color);
+  }
+  .ant-pagination-item-link {
+    background-color: transparent;
+    color: var(--dark-fg-color);
+  }
+  .ant-pagination-item-link:hover {
+    color: var(--dark-primary-color);
+  }
+
+  /* for a-dropdown */
+  .ant-btn.ant-dropdown-trigger {
+    background-color: transparent;
+    color: var(--dark-fg-color);
+  }
+  .ant-btn:hover {
+    color: var(--dark-primary-color);
+  }
+  .ant-btn.ant-dropdown-trigger.ant-dropdown-open{
+    color: var(--dark-primary-color);
+  }
+
+  /* for a-card */
+  .ant-card {
+    background-color: transparent;
+    color: var(--dark-fg-color);
+    .ant-card-actions {
+      background-color: var(--dark-bar-color);
+      color: var(--dark-fg-color);
+    }
+    .ant-card-actions li {
+      color: var(--dark-fg-color);
+    }
+  }
+
+  /* for a-spin */
+  .ant-spin.ant-spin-spinning {
+    color: white;
+  }
+  .ant-spin.ant-spin-show-text {
+    color: white;
+  }
+  .ant-spin-container.ant-spin-blur {
+    background-color: black;
+    opacity: 0.4;
+  }
+  .ant-spin-container:after {
+    background-color: black;
+  }
+
+  /* for a-collapse, a-collapse-panel */
+  .ant-collapse {
+    background-color: var(--dark-bar-color);
+    .ant-collapse-header {
+      color: var(--dark-fg-color);
+    }
+  }
+  .ant-collapse-content {
+    background-color: var(--dark-bg-color);
+  }
+
+  /* for form and input box */
+  .ant-form-item label {
+    color: var(--dark-fg-color);
+  }
+  .ant-input-affix-wrapper {
+    background-color: transparent;
+    .ant-input {
+      background-color: transparent;
+      color: var(--dark-fg-color);
+    }
+  }
+  .my.antd-input-number {
+    background-color: transparent;
+    color: var(--dark-fg-color);
+  }
+  .my.antd-select.ant-select-single {
+    background-color: transparent;
+    color: var(--dark-fg-color);
+  }
+  .my.antd-select .ant-select-selector {
+    background-color: transparent;
+  }
+  .my.antd-select.ant-select-single.ant-select-disabled
+  .ant-select-selector {
+    color: var(--dark-fg-color);
+  }
+  .ant-picker {
+    background-color: transparent;
+  }
+  .ant-picker-input input {
+    color: var(--dark-fg-color);
+  }
+  .ant-input-number-handler-wrap {
+    background-color: #3e3e3e;
+  }
+  .ant-input-number-handler-down-inner,
+  .ant-input-number-handler-up-inner {
+    color: var(--dark-symbol-color);
+  }
+  .anticon.ant-input-clear-icon {
+    color: #ffffff70;
+  }
+  .ant-select-clear {
+    background-color: transparent;
+    color: var(--dark-symbol-color);
+  }
+  .ant-select-arrow {
+    color: var(--dark-symbol-color);
+  }
+  .ant-picker-clear {
+    background-color: transparent;
+    color: var(--dark-symbol-color);
+  }
+  .ant-picker-suffix {
+    color: var(--dark-symbol-color);
+  }
+
+  .ant-form-item-has-error {
+    .my.antd-select .ant-select-selector {
+      background-color: #ff919138;
+    }
+    .ant-picker {
+      background-color: #ff919138;
+    }
+    .ant-input:hover {
+      background-color: transparent;
+    }
+    .ant-input-number:hover {
+      background-color: transparent;
+    }
+    .ant-input-number-input {
+      background-color: #ff919138;
+    }
+    .ant-input-affix-wrapper {
+      background-color: #ff919138;
+    }
+    .ant-input-affix-wrapper:hover {
+      background-color: #ff919138;
+    }
+  }
+
+  .ant-form-item-has-warning {
+    .my.antd-select .ant-select-selector {
+      background-color: #fbff9138;
+    }
+    .ant-picker {
+      background-color: #fbff9138;
+    }
+    .ant-input:hover {
+      background-color: transparent;
+    }
+    .ant-input-number:hover {
+      background-color: transparent;
+    }
+    .ant-input-number-input {
+      background-color: #fbff9138;
+    }
+    .ant-input-affix-wrapper {
+      background-color: #fbff9138;
+    }
+    .ant-input-affix-wrapper:hover {
+      background-color: #fbff9138;
+    }
+  }
+
+}
+
+/* for overlay of a-dropdown */
+.my.antd-dropdown-menu-dark
+.ant-dropdown-menu.ant-dropdown-menu-root {
+  background-color: var(--dark-bg-color);
+  .ant-dropdown-menu-item {
+    color: var(--dark-fg-color);
+  }
+  .ant-dropdown-menu-item:hover {
+    background-color: var(--dark-high-color);
+  }
+}
+
+/* for overlay of a-select */
+.my.antd-dropdown-menu-dark.ant-select-dropdown {
+  background-color: var(--dark-bg-color);
+  .ant-select-item-option-content {
+    color: var(--dark-fg-color);
+  }
+  .ant-select-item.ant-select-item-option.ant-select-item-option-selected {
+    background-color: var(--dark-selected-color);
+  }
+  .ant-select-item.ant-select-item-option.ant-select-item-option-active {
+    background-color: var(--dark-high-color);
+  }
+}
+
+/* for overlay of a-date-picker */
+.my.antd-dropdown-menu-dark.ant-picker-dropdown {
+  background-color: var(--dark-bg-color);
+
+  .ant-picker-panel {
+    background-color: var(--dark-panel-color);
+    .ant-picker-header-view {
+      color: var(--dark-fg-color);
+    }
+    .ant-picker-header button {
+      color: var(--dark-symbol-color);
+    }
+    .ant-picker-content th {
+      color: var(--dark-fg-color);
+    }
+    .ant-picker-cell-inner {
+      color: var(--dark-inactive-color);
+    }
+    .ant-picker-cell.ant-picker-cell-in-view {
+      .ant-picker-cell-inner {
+        color: var(--dark-fg-color);
+      }
+    }
+    .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)
+    .ant-picker-cell-inner {
+      background-color: var(--dark-high-color);
+    }
+  }
+}
+
+/* notification (prompt) */
+.my.my-antd-notification-dark {
+  background-color: var(--dark-bar-color);
+  color: var(--dark-fg-color);
+  .ant-notification-notice-message {
+    color: var(--dark-fg-color);
+  }
+  .ant-notification-close-x {
+    color: var(--dark-symbol-color);
+  }
 }
 
 .w100 {
   width: 100%;
 }
+@media screen and (min-width: 500px) {
+  .my.ant-menu.ant-menu-root.ant-menu-horizontal.app-menu-bar {
+    display: block;
+  }
+  .my.ant-menu.ant-menu-root.ant-menu-inline.app-stack-menu {
+    display: none;
+  }
+}
+@media screen and (max-width: 500px) {
+  .my.ant-menu.ant-menu-root.ant-menu-horizontal.app-menu-bar {
+    display: none;
+  }
+  .my.ant-menu.ant-menu-root.ant-menu-inline.app-stack-menu {
+    display: block;
+  }
+}
 
 /* my card */
-.my.solo-card.holder {
-  margin: 0.1rem auto;
-  max-width: 50rem;
+.my.antd-solo-card.holder {
+  margin: 0.1em auto;
+  max-width: 50em;
 }
-.my.cards.holder {
+.my.antd-cards.holder {
   margin: 0;
-  padding: 0.4rem;
-  display: flex; 
+  padding: 0.4em;
+  display: flex;
   flex-flow: row wrap;
 }
 .my.solo-card {
   margin: 0.5em 0;
 }
 .my.card {
-  width: 30rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
+  width: 30em;
+  padding-right: 1em;
+  padding-bottom: 1em;
 }
 .my.small.card {
-  width: 22rem;
+  width: 22em;
 }
 .my.big.card {
-  width: 46rem;
+  width: 46em;
 }
 .my.huge.card {
-  width: 120rem;
+  width: 120em;
+}
+@media screen and (max-width: 400px) {
+  .my.card {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  .my.small.card,
+  .my.big.card,
+  .my.huge.card {
+    width: 100%;
+  }
+}
+
+div.my.button-bar {
+  margin: 0.8em 0;
+  .my.antd-btn {
+    margin-right: 0.4em;
+    margin-bottom: 0.4em;
+  }
 }
 
 /* fix a-input-number width issue */
-.my.ant.input-number {
+.my.antd-input-number {
+  width: 100%;
+}
+.my.antd-date-picker {
   width: 100%;
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.home-logo {
+  border-radius: 20%;
+  width: 125px;
+  height: 125px;
+  margin-right: 8px;
+}
+
+/* for Transition tag animations named 'slide-fade' */
+.slide-fade-enter-active {
+  transition: all 0.36s ease-out;
+}
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }

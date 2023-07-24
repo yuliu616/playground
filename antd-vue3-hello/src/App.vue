@@ -1,32 +1,48 @@
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/form1">Form</RouterLink>
-        <RouterLink to="/message">Message</RouterLink>
-      </nav>
-    </div>
+    <MenuBar />
   </header>
 
   <a-config-provider :locale="locale">
-    <RouterView />
+    <div :class="{ dark: darkTheme, light: !darkTheme, }"
+      class="view-wrapper"
+    >
+      <RouterView />
+    </div>
+    <PageFooter />
   </a-config-provider>
 </template>
 
 <script lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
+import PageFooter from '@/components/PageFooter.vue';
+import MenuBar from './components/MenuBar.vue';
+import { NativeDomUtil } from './util/NativeDomUtil';
 import en_US from 'ant-design-vue/es/locale/en_US';
-// import zh_CN from 'ant-design-vue/es/locale/zh_CN';
+import zh_CN from 'ant-design-vue/es/locale/zh_CN';
 // import ja_JP from 'ant-design-vue/es/locale/ja_JP';
+import { ref } from 'vue';
+import type { ILogger } from './model/core/ILogger';
+
+const logger: ILogger = console;
+
+// note that, these color should match with main.css
+const COLOR_PALETTE = {
+  DARK_FG_COLOR: '#f0f0f0',
+  DARK_BG_COLOR: '#303030',
+  LIGHT_FG_COLOR: 'black',
+  LIGHT_BG_COLOR: 'whitesmoke',  
+};
 
 export default {
   components: {
-    RouterLink, 
+    RouterLink,
     RouterView,
+    MenuBar,
+    PageFooter,
+  },
+  computed: {
+    darkTheme: ()=>!!(+import.meta.env.VITE_DarkTheme),
   },
   data() {
     return {
@@ -35,44 +51,19 @@ export default {
       // locale: ja_JP,
     };
   },
+  mounted() {
+    NativeDomUtil.changeBodyForeBackColor(
+      this.darkTheme ? COLOR_PALETTE.DARK_FG_COLOR : COLOR_PALETTE.LIGHT_FG_COLOR,
+      this.darkTheme ? COLOR_PALETTE.DARK_BG_COLOR : COLOR_PALETTE.LIGHT_BG_COLOR,
+    );
+  },
 };
 </script>
 
 <style scoped>
-.logo {
-  display: block;
-  background-color: rgba(0,0,0, 0.25);
-  margin: 0 auto 2rem;
-}
-
-a {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-a:hover {
-  background-color: hsla(160, 100%, 37%, 0.2);
-}
-
-/* route-link that point to current view */
-nav a.router-link-exact-active {
-  color: white;
-  text-decoration: underline;
-}
-nav a.router-link-exact-active:hover {
-  /* cancel style of default anchor */
-  background-color: transparent;
-}
-
-/* default style of router-link */
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid rgba(235, 235, 235, 0.64);
-  
-}
-nav a:first-of-type {
-  /* cancel border adding for the first item */
-  border: 0;
+div.view-wrapper {
+  padding: 2em;
+  width: 100%;
+  height: fit-content;
 }
 </style>

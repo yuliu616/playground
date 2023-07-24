@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <div style="margin-top: 0.5rem;">
+      <div style="margin-top: 0.5em;">
         <NameShuffleField v-model:person-name="surveyForm.name" />
       </div>
     </div>
@@ -162,17 +162,17 @@ export default {
 
 <style scoped>
 .FormPanel {
-  padding: 1.8rem;
-  max-width: 30rem;
-  margin: 1rem auto;
+  padding: 1.8em;
+  max-width: 30em;
+  margin: 1em auto;
 
   border: 1px solid white;
-  border-radius: 1.6rem;
+  border-radius: 1.6em;
   background-color: rgb(46, 46, 46);
 }
 
 div.field {
-  margin-top: 0.4rem;
+  margin-top: 0.4em;
 }
 div.field input {
   color: white;
@@ -181,17 +181,17 @@ div.field input {
 div.field textarea {
   color: white;
   background-color: rgb(0, 53, 30);
-  min-height: 6rem;
+  min-height: 6em;
 }
 
 .FormPanel input[type=submit] {
   padding: 0.4em 1.6em;
-  border-radius: 0.4rem;
+  border-radius: 0.4em;
 }
 
 .FormPanel button {
   padding: 0.4em 1.6em;
-  border-radius: 0.4rem;
+  border-radius: 0.4em;
   margin-left: 0.4em;
 }
 

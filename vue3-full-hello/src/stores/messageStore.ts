@@ -1,14 +1,15 @@
 import { defineStore } from "pinia";
+import { ref, type Ref } from 'vue';
 
 export interface MessageStoreState {
-  messageList: string[];
-  count: number;
-  isEmpty: boolean;
+  messageList: Ref<string[]>;
+  // count: Ref<number>;
+  // isEmpty: Ref<boolean>;
 }
 
 let useMessageStore = defineStore('Message', {
   state: ()=><MessageStoreState>({
-    messageList: <string[]>[],
+    messageList: ref([]),
   }),
   getters: {
     count: (state)=>state.messageList.length,

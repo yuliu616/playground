@@ -1,9 +1,12 @@
 <template>
-  <div class="my cards holder">
+  <main class="my antd-cards holder">
     <div class="my small card" v-for="it in peopleList">
       <a-card class="person-card"
-        :headStyle="{ 'background-color': 'teal', 'color': 'white' }"
         :title="('[Person] '+it.firstName)"
+        :head-style="{ 
+          backgroundColor: 'teal', 
+          color: 'white',
+        }"
       >
         <p>
           {{ it.firstName }} {{ it.lastName }}
@@ -19,13 +22,22 @@
         </p>
 
         <template #actions>
-          <PlusCircleFilled />
-          <FireFilled />
-          <BarsOutlined />
+          <div>
+            <font-awesome-icon icon="pen-to-square" style="margin-left: 0.4em;" />
+            EDIT
+          </div>
+          <div>
+            <font-awesome-icon icon="xmark" style="margin-left: 0.4em;" />
+            CLOSE
+          </div>
+          <div>
+            <font-awesome-icon icon="list" style="margin-left: 0.4em;" />
+            LIST
+          </div>
         </template>
       </a-card>
     </div>
-  </div>
+  </main>
 </template>
 
 <script lang="ts">
@@ -43,7 +55,7 @@ export default {
     };
   },
   mounted() {
-    fetchPersonList().then(list => {
+    fetchPersonList({ offset: 0, limit: 16 }).then(list => {
       this.peopleList = list;
     });
   },
@@ -52,7 +64,7 @@ export default {
 
 <style scoped>
 .person-card span {
-  margin-right: 1rem;
-  margin-bottom: 0.4rem;
+  margin-right: 1em;
+  margin-bottom: 0.4em;
 }
 </style>

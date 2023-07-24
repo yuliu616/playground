@@ -59,7 +59,7 @@ export default {
 .button {
   display: inline-block;
   border-radius: 8%;
-  padding: 0.4rem 0.8rem;
+  padding: 0.4em 0.8em;
   margin-left: 0.8em;
   
   background-color: #ffffff;

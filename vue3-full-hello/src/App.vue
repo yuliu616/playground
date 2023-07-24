@@ -37,7 +37,7 @@ let logoBorder = computed(()=>{
 .logo {
   display: block;
   background-color: rgba(0,0,0, 0.25);
-  margin: 0 auto 2rem;
+  margin: 0 auto 2em;
 }
 
 a {
@@ -62,7 +62,7 @@ nav a.router-link-exact-active:hover {
 /* default style of router-link */
 nav a {
   display: inline-block;
-  padding: 0 1rem;
+  padding: 0 1em;
   border-left: 1px solid rgba(235, 235, 235, 0.64);
   
 }

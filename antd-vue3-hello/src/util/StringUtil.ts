@@ -1,4 +1,4 @@
-export class StringHelper {
+export class StringUtil {
 
   /**
    * usage: format('i like {0}.', 'eating')

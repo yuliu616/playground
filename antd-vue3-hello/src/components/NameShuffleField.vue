@@ -46,4 +46,8 @@ div.nameField {
   background-color: pale;
   padding: 6px 12px;
 }
+
+div.view-wrapper.dark div.nameField {
+  color: white;
+}
 </style>

@@ -1,5 +1,8 @@
 import { message, notification } from 'ant-design-vue';
-import { StringHelper } from "@/util/StringHelper";
+import { StringUtil } from "@/util/StringUtil";
+import type { ILogger } from '@/model/core/ILogger';
+
+let darkTheme = !!(+import.meta.env.VITE_DarkTheme);
 
 export class MessageServiceImpl {
 
@@ -12,6 +15,18 @@ export class MessageServiceImpl {
     notification.info({
       message: options.message,
       description: options.description,
+      class: (darkTheme ? 'my my-antd-notification-dark':undefined),
+    });
+  }
+
+  public async error(options: {
+    message: string, 
+    description?: string
+  }): Promise<void> {
+    notification.error({
+      message: options.message,
+      description: options.description,
+      class: (darkTheme ? 'my my-antd-notification-dark':undefined),
     });
   }
 
@@ -22,6 +37,7 @@ export class MessageServiceImpl {
     notification.success({
       message: options.message,
       description: options.description,
+      class: (darkTheme ? 'my my-antd-notification-dark':undefined),
     });
   }
 

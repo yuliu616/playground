@@ -6,6 +6,6 @@
 
 <style scoped>
 div {
-  margin: 1.2rem;
+  margin: 1.2em;
 }
 </style>

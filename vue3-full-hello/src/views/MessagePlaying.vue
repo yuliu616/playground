@@ -131,15 +131,15 @@ export default {
 .messageList {
   border: 4px solid snow;
   border-radius: 12px;
-  margin: 0.4rem;
-  padding: 0.4rem;
+  margin: 0.4em;
+  padding: 0.4em;
 }
 
 .item {
   border: 2px solid darkcyan;
   border-radius: 8px;
-  margin: 0.12rem;
-  padding: 0.2rem;
+  margin: 0.12em;
+  padding: 0.2em;
 }
 
 .crossing-item {
@@ -149,6 +149,6 @@ export default {
 }
 
 .messageDraft {
-  min-height: 2 rem;
+  min-height: 2 em;
 }
 </style>

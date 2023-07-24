@@ -47,6 +47,6 @@ export default {
 .body-pane {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2em;
 }
 </style>

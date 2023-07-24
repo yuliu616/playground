@@ -1,8 +1,8 @@
 <template>
   <div>
-    <a-alert type="success" 
-      message="Welcome, welcome, really welcome.">
-    </a-alert>
+    <a-alert class="my antd-alert" show-icon type="success"
+      message="Welcome, welcome, really welcome."
+    />
     <p style="background-color: black;">
       <font-awesome-icon icon="sun" />
       <font-awesome-icon icon="sun" />
@@ -15,6 +15,6 @@
 
 <style scoped>
 div {
-  margin: 1.2rem;
+  margin: 1.2em;
 }
 </style>

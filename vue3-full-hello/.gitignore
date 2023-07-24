@@ -1,0 +1,24 @@
+# System Files
+Thumbs.db
+.DS_Store
+
+# IDEs and editors
+/.vs
+/.vscode
+/.idea
+*.iml
+
+# dependencies
+node_modules
+
+# compiled output
+out
+target
+/dist
+
+# logs
+npm-debug.log
+log
+
+#vue3 files
+.env.local
