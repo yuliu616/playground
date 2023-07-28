@@ -1,0 +1,19 @@
+heading: today is a good day.
+people:
+  - first_name: peter
+    last_name: chan
+    gender: MALE
+    age: 40
+    weightInKm: 68.4
+  - first_name: marry
+    last_name: li
+    gender: FEMALE
+    age: 32
+    weightInKm: 72.62
+remarks: |
+  Xinhuanet is a comprehensive service-oriented news 
+  information portal and the most influential online 
+  media in China. As the main communication platform 
+  of all-media news information products created by 
+  Xinhua News Agency, Xinhuanet releases global news 
+  information 24 hours daily in 11 languages.
